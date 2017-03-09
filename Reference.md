@@ -1,4 +1,3 @@
-###Reference
 [Mapping](#Mapping)
 - [Mapping to a new object](#MappingNew)
 - [Mapping to an existing object](#MappingToTarget)
