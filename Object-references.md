@@ -11,20 +11,7 @@ NOTE: Projection doesn't support circular reference. To overcome, you might use 
     TypeAdaptConfig.GlobalSettings.Default.PreserveReference(true);
     var students = context.Student.Include(p => p.Schools).Adapt<List<StudentDTO>>();
 
-NOTE: in Mapster setting is per type pair, not per hierarchy (see https://github.com/chaowlert/Mapster/wiki/Nested-class-mapping). Therefore, you need to apply config to all type pairs.
-
-    TypeAdapterConfig<ParentPoco, ParentDto>.NewConfig().PreserveReference(true);
-    TypeAdapterConfig<ChildPoco, ChildDto>.NewConfig().PreserveReference(true);
-    TypeAdapterConfig<GrandChildPoco, GrandChildDto>.NewConfig().PreserveReference(true);
-
-Or you can set `PreserveReference` in global setting.
-
-    TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
-
-If you don't want to set config in global setting, you can also use `Fork`.
-
-    var forked = TypeAdapterConfig.GlobalSettings.Default.Fork(config => config.Default.PreserveReference(true));
-    var parentDto = parentPoco.Adapt<ParentDto>(forked);
+NOTE: in Mapster setting is per type pair, not per hierarchy (see https://github.com/chaowlert/Mapster/wiki/Config-for-nested-classes). Therefore, you need to apply config to all type pairs.
 
 ### Shallow copy
 
