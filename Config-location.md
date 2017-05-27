@@ -30,6 +30,20 @@ Problem with separating configuration and mapping is, coding will be separated i
 
 Don't worry about performance, forked config will be compiled only once. When mapping occurs for the second time, `Fork` function will return config from cache.
 
+##### Using Fork in generic class or method
+
+`Fork` method uses filename and line number and the key. But if you use `Fork` method inside generic class or method, you must specify your own key (with all type names) to prevent `Fork` to return invalid config from different type arguments.
+
+```
+IQueryable<TDto> GetItems<TPoco, TDto>()
+{
+    var forked = config.Fork(
+        f => f.ForType<TPoco, TDto>().Ignore("Id"), 
+        $"MyKey|{typeof(TPoco).FullName}|{typeof(TDto).FullName}");
+    return db.Set<TPoco>().ProjectToType<TDto>(forked);
+}
+```
+
 ### In separated assemblies
 
 It's relatively common to have mapping configurations spread across a number of different assemblies.  
