@@ -10,6 +10,9 @@ Mapster will automatically map properties with the same names. You can ignore me
 
 You can ignore based on member information by `IgnoreMember` command. Please see https://github.com/chaowlert/Mapster/wiki/Rule-based-member-mapping for more info.
 
+    TypeAdapterConfig.GlobalSettings.Default
+        .IgnoreMember((member, side) => !validTypes.Contains(member.Type));
+
 ### IgnoreNonMapped
 
 You can ignore all non-mapped members by IgnoreNonMapped command. For example, we would like to map only Id and Name.
@@ -23,6 +26,16 @@ You can ignore all non-mapped members by IgnoreNonMapped command. For example, w
 ### Ignore by attribute
 
 You can ignore member by decorate with `[AdaptIgnore]`, and you can ignore custom attributes by `IgnoreAttribute` command. Please see https://github.com/chaowlert/Mapster/wiki/Setting-by-attributes for more info.
+
+```
+public class Product {
+    public string Id { get; set; }
+    public string Name { get; set; }
+
+    [AdaptIgnore]
+    public decimal Price { get; set; }
+}
+```
 
 ### Ignore conditionally
 
