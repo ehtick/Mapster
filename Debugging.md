@@ -9,11 +9,14 @@ In order to step-into debugging, make sure you turn off just my code feature.
 
 ##### Usage
 
-Just declare `EnableDebugging`, this command is working only in debug mode. Therefore, you can keep this flag turn on. But do not forget to build your application in release mode for production, otherwise, there will be huge performance impact.
+Just declare `EnableDebugging`, this command is working only in debug mode. Therefore, you can keep this flag turn on. But do not forget to build your application in release mode for production, otherwise, there will be huge performance impact. This command should be called before you start mapping.
 
     TypeAdapterConfig.GlobalSettings.EnableDebugging();
 
-    var dto = poco.Adapt<SimplePoco, SimpleDto>(); <--- Press F11 on this line to step-into this function!!
+And whenever you would like to step into mapping function, you need to mark `MapsterDebugger.BreakOnEnterAdaptMethod` to `true`. You can turn on or off any time by coding or Immediate window.
+
+    MapsterDebugger.BreakOnEnterAdaptMethod = true;
+    var dto = poco.Adapt<SimplePoco, SimpleDto>(); <--- After this line, you will step-into this function!!
 
 ![image](https://cloud.githubusercontent.com/assets/5763993/26521773/180427b6-431b-11e7-9188-10c01fa5ba5c.png)
 
