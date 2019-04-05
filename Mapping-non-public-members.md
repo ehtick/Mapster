@@ -8,11 +8,6 @@ Or global!
 
     TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMember(true);
 
-If you turn on at global level, you must also declare type pair to ensure Mapster will treat type as POCO rather than primitive.
-
-    TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMember(true);
-    TypeAdapterConfig<PrivatePoco, PrivateDto>.NewConfig();
-
 ### AdaptMember attribute
 
 You can also map non-public members with `AdaptMember` attribute.
@@ -41,4 +36,11 @@ With `IncludeMember`, you can select which access modifier to allow.
     TypeAdapterConfig.GlobalSettings.Default
         .IncludeMember((member, side) => member.AccessModifier == AccessModifier.Internal 
                                          || member.AccessModifier == AccessModifier.ProtectedInternal);
+
+### Note for non-public member mapping
+
+If type doesn't contain public properties, Mapster will treat type as primitive, you must also declare type pair to ensure Mapster will apply non-public member mapping.
+
+    TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMember(true);
+    TypeAdapterConfig<PrivatePoco, PrivateDto>.NewConfig();
 
