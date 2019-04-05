@@ -27,8 +27,16 @@ If you would like to allow only properties not public field to be mapped, you ca
 
 Suppose you are working with EF, and you would like to skip all navigation properties. Then we will allow only short list of types.
 
-    TypeAdapterConfig.GlobalSettings.Default
-        .IgnoreMember((member, side) => !validTypes.Contains(member.Type));
+**Allow by types**
+```
+TypeAdapterConfig.GlobalSettings.Default
+    .IgnoreMember((member, side) => !validTypes.Contains(member.Type));
+```
+**Allow by Namespaces**
+```
+TypeAdapterConfig.GlobalSettings.Default
+    .IgnoreMember((member, side) => !member.Type.Namespace.StartsWith("System"));
+```
 
 ### Allow internal members
 
