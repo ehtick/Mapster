@@ -10,14 +10,19 @@ TypeAdapterConfig<Poco, Dto>.NewConfig()
 ### Transform value
 
 While `Map` method specify logic for single property, `AddDestinationTransform` allows transforms for all items of a type, such as trimming all strings. But really any operation can be performed on the destination value before assignment.
-```csharp
-    //Global
-    TypeAdapterConfig.GlobalSettings.Default.AddDestinationTransform((string x) => x.Trim());
 
-    //Per mapping configuration
-    TypeAdapterConfig<TSource, TDestination>.NewConfig()
+**Trim string**
+```csharp
+TypeAdapterConfig<TSource, TDestination>.NewConfig()
         .AddDestinationTransforms((string x) => x.Trim());
 ```
+
+**Null replacement**
+```csharp
+TypeAdapterConfig<TSource, TDestination>.NewConfig()
+        .AddDestinationTransforms((string x) => x ?? "");
+```
+
 ### Passing run-time value
 
 In some cases, you might would like to pass runtime values (ie, current user). On configuration, we can receive run-time value by `MapContext.Current.Parameters`.
@@ -35,3 +40,4 @@ var dto = poco.BuildAdapter()
               .AddParameters("user", this.User.Identity.Name)
               .AdaptToType<Dto>();
 ```
+
