@@ -97,8 +97,8 @@
 | `NameMatchingStrategy` | Define how to resolve property's name | x | [custom naming](https://github.com/MapsterMapper/Mapster/wiki/Naming-convention) |
 | `PreserveReference` | Tracking reference when mapping |  | [object reference](https://github.com/MapsterMapper/Mapster/wiki/Object-references) |
 | `ShallowCopyForSameType` | Direct assign rather than deep clone if type pairs are the same |  | [shallow & merge](https://github.com/MapsterMapper/Mapster/wiki/Shallow-merge) |
-| `TwoWays` | Define type mapping are 2 ways | | [2-ways & unflattening](https://github.com/MapsterMapper/Mapster/wiki/Two-ways) |
-| `Unflattening` | Allow unflatten mapping | |[2-ways & unflattening](https://github.com/MapsterMapper/Mapster/wiki/Two-ways) |
+| `TwoWays` | Define type mapping are 2 ways | x | [2-ways & unflattening](https://github.com/MapsterMapper/Mapster/wiki/Two-ways) |
+| `Unflattening` | Allow unflatten mapping | x |[2-ways & unflattening](https://github.com/MapsterMapper/Mapster/wiki/Two-ways) |
 
 #### Attributes
 
