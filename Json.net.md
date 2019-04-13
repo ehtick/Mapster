@@ -9,7 +9,9 @@ Json.net conversion supports
 
 Call `EnableJsonMapping` from your `TypeAdapterConfig` to enable Json.Net mapping.
 
-    TypeAdapterConfig.GlobalSettings.EnableJsonMapping();
+```csharp
+TypeAdapterConfig.GlobalSettings.EnableJsonMapping();
+```
     
 This will allow
 

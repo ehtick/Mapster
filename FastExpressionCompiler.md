@@ -6,6 +6,8 @@ Getting the package
 
 Then add following code on start up
 
-    TypeAdapterConfig.GlobalSettings.Compiler = exp => exp.CompileFast();
+```csharp
+TypeAdapterConfig.GlobalSettings.Compiler = exp => exp.CompileFast();
+```
 
 That's it. Now your code will enjoy performance boost 1.3 to 4.0 times faster!

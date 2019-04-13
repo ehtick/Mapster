@@ -2,20 +2,22 @@
 
 Configuration should be set only once and reuse for mapping. Therefore, we should not keep configuration and mapping in the same location. For example:
 
-    config.ForType<Poco, Dto>().Ignore("Id");
-    var dto1 = poco1.Adapt<Dto>(config);
+```csharp
+config.ForType<Poco, Dto>().Ignore("Id");
+var dto1 = poco1.Adapt<Dto>(config);
 
-    config.ForType<Poco, Dto>().Ignore("Id"); <--- Exception occurred here, because config was already compiled
-    var dto2 = poco2.Adapt<Dto>(config);
+config.ForType<Poco, Dto>().Ignore("Id"); //<--- Exception occurred here, because config was already compiled
+var dto2 = poco2.Adapt<Dto>(config);
+```
 
 Therefore, you should separate configuration and mapping. Configuration should keep in entry point such as `Main` function or `Global.asax.cs` or `Startup.cs`.
 
-```
+```csharp
 // Application_Start in Global.asax.cs
 config.ForType<Poco, Dto>().Ignore("Id");
 ```
 
-```
+```csharp
 // in Controller class
 var dto1 = poco1.Adapt<Dto>(config);
 var dto2 = poco2.Adapt<Dto>(config);
@@ -25,8 +27,10 @@ var dto2 = poco2.Adapt<Dto>(config);
 
 Problem with separating configuration and mapping is, coding will be separated into 2 locations. You might remove or alter mapping, and you can forget to update the configuration. `Fork` method allow you to keep config and mapping inline.
 
-    var dto = poco.Adapt<Dto>(
-        config.Fork(forked => forked.ForType<Poco, Dto>().Ignore("Id"));
+```csharp
+var dto = poco.Adapt<Dto>(
+	config.Fork(forked => forked.ForType<Poco, Dto>().Ignore("Id"));
+```
 
 Don't worry about performance, forked config will be compiled only once. When mapping occurs for the second time, `Fork` function will return config from cache.
 
@@ -34,7 +38,7 @@ Don't worry about performance, forked config will be compiled only once. When ma
 
 `Fork` method uses filename and line number and the key. But if you use `Fork` method inside generic class or method, you must specify your own key (with all type names) to prevent `Fork` to return invalid config from different type arguments.
 
-```
+```csharp
 IQueryable<TDto> GetItems<TPoco, TDto>()
 {
     var forked = config.Fork(
@@ -55,34 +59,44 @@ It can be helpful to allow assemblies to be scanned for these rules so you have 
 
 Assembly scanning is simple, just create any number of `IRegister` implementations in your assembly, then call `Scan` from your `TypeAdapterConfig` class:
 
-	public class MyRegister : IRegister
+```csharp
+public class MyRegister : IRegister
+{
+	public void Register(TypeAdapterConfig config)
 	{
-		public void Register(TypeAdapterConfig config)
-		{
-			config.NewConfig<TSource, TDestination>();
+		config.NewConfig<TSource, TDestination>();
 
-			//OR to create or enhance an existing configuration
-			config.ForType<TSource, TDestination>();
-		}
+		//OR to create or enhance an existing configuration
+		config.ForType<TSource, TDestination>();
 	}
+}
+```
 
 To scan and register at the Global level:
 
-	TypeAdapterConfig.GlobalSettings.Scan(assembly1, assembly2, assemblyN)
+```csharp
+TypeAdapterConfig.GlobalSettings.Scan(assembly1, assembly2, assemblyN)
+```
 
 For a specific config instance:
 
-	var config = new TypeAdapterConfig();
-	config.Scan(assembly1, assembly2, assemblyN);
+```csharp
+var config = new TypeAdapterConfig();
+config.Scan(assembly1, assembly2, assemblyN);
+```
 
 #### Apply method
 
 If you use other assembly scanning library such as MEF, you can easily apply registration with `Apply` method.
 
-	var registers = container.GetExports<IRegister>();
-	config.Apply(registers);
+```csharp
+var registers = container.GetExports<IRegister>();
+config.Apply(registers);
+```
 
 `Apply` method also allow you to selectively pick from one or more `IRegister` rather than every `IRegister` in assembly.
 
-	var register = new MockingRegister();
-	config.Apply(register);
+```csharp
+var register = new MockingRegister();
+config.Apply(register);
+```

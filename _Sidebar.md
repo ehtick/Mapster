@@ -1,8 +1,9 @@
 ### Getting Started
 
+##### [References](https://github.com/MapsterMapper/Mapster/wiki)
 ##### Mapping
 * [Basic usages](https://github.com/MapsterMapper/Mapster/wiki/Basic-usages)
-* [3 kind of mappers](https://github.com/MapsterMapper/Mapster/wiki/Mappers)
+* [Mappers](https://github.com/MapsterMapper/Mapster/wiki/Mappers)
 * [Data types](https://github.com/MapsterMapper/Mapster/wiki/Data-types)
 
 ##### Configuration
@@ -11,7 +12,7 @@
 * [Config instance](https://github.com/MapsterMapper/Mapster/wiki/Config-instance)
 * [Config location](https://github.com/MapsterMapper/Mapster/wiki/Config-location)
 * [Config validation & compilation](https://github.com/MapsterMapper/Mapster/wiki/Config-validation-&-compilation)
-* [Config for nested classes](https://github.com/MapsterMapper/Mapster/wiki/Config-for-nested-classes)
+* [Config for nested mapping](https://github.com/MapsterMapper/Mapster/wiki/Config-for-nested-mapping)
 
 ##### Settings
 * Custom member matching logic
@@ -21,14 +22,18 @@
   * [Ignoring members](https://github.com/MapsterMapper/Mapster/wiki/Ignoring-members)
   * [Rule-based member matching](https://github.com/MapsterMapper/Mapster/wiki/Rule-based-member-mapping)
   * [Mapping non-public members](https://github.com/MapsterMapper/Mapster/wiki/Mapping-non-public-members)
-* [Object creation & validation](https://github.com/MapsterMapper/Mapster/wiki/Object-creation-and-validation)
+  * [Two ways & unflattening mapping](https://github.com/MapsterMapper/Mapster/wiki/Two-ways)
+* [Constructor mapping](https://github.com/MapsterMapper/Mapster/wiki/Constructor-mapping)
+* [Before & after mapping](https://github.com/MapsterMapper/Mapster/wiki/Before-after-mapping)
 * [Setting values](https://github.com/MapsterMapper/Mapster/wiki/Setting-values)
-* [Working with object references](https://github.com/MapsterMapper/Mapster/wiki/Object-references)
+* [Shallow & merge mapping](https://github.com/MapsterMapper/Mapster/wiki/Shallow-merge)
+* [Recursive & object references](https://github.com/MapsterMapper/Mapster/wiki/Object-references)
 * [Custom conversion logic](https://github.com/MapsterMapper/Mapster/wiki/Custom-conversion-logic)
 * [Inheritance](https://github.com/MapsterMapper/Mapster/wiki/Config-inheritance)
 
 ##### Plugins
+* [Code Generation](https://github.com/MapsterMapper/Mapster/wiki/CodeGen)
 * [Debugging](https://github.com/MapsterMapper/Mapster/wiki/Debugging)
 * [EF6](https://github.com/MapsterMapper/Mapster/wiki/EF6)
-* [Json.net](https://github.com/MapsterMapper/Mapster/wiki/Json.net)
 * [FastExpressionCompiler](https://github.com/MapsterMapper/Mapster/wiki/FastExpressionCompiler)
+* [Json.net](https://github.com/MapsterMapper/Mapster/wiki/Json.net)

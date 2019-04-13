@@ -1,6 +1,6 @@
 Configuration is per type pair, not per type hierarchy. For example if you have parent and child classes.
 
-```
+```csharp
 class ParentPoco
 {
     public string Id { get; set; }
@@ -19,24 +19,34 @@ class GrandChildPoco
 
 And if you have setting on parent type.
 
-```
-TypeAdapterConfig<ParentPoco, ParentDto>.NewConfig().PreserveReference(true);
+```csharp
+TypeAdapterConfig<ParentPoco, ParentDto>.NewConfig()
+    .PreserveReference(true);
 ```
 
 When mapping, child type will not get effect from `PreserveReference`. 
 
 To do so, you must specify all type pairs inside `ParentPoco`.
 
-    TypeAdapterConfig<ParentPoco, ParentDto>.NewConfig().PreserveReference(true);
-    TypeAdapterConfig<ChildPoco, ChildDto>.NewConfig().PreserveReference(true);
-    TypeAdapterConfig<GrandChildPoco, GrandChildDto>.NewConfig().PreserveReference(true);
+```csharp
+TypeAdapterConfig<ParentPoco, ParentDto>.NewConfig()
+    .PreserveReference(true);
+TypeAdapterConfig<ChildPoco, ChildDto>.NewConfig()
+    .PreserveReference(true);
+TypeAdapterConfig<GrandChildPoco, GrandChildDto>.NewConfig()
+    .PreserveReference(true);
+```
 
 Or you can set `PreserveReference` in global setting.
 
-    TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
+```csharp
+TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
+```
 
 If you don't want to set config in global setting, you can also use `Fork`.
 
-    var forked = TypeAdapterConfig.GlobalSettings.Fork(config => config.Default.PreserveReference(true));
-    var parentDto = parentPoco.Adapt<ParentDto>(forked);
-
+```csharp
+var forked = TypeAdapterConfig.GlobalSettings.Fork(config => 
+    config.Default.PreserveReference(true));
+var parentDto = parentPoco.Adapt<ParentDto>(forked);
+```

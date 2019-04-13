@@ -2,7 +2,7 @@
 
 When a property decorated with `[AdaptIgnore]`, that property will be excluded from Mapping. For example, if we would like to exclude price to be mapped.
 
-```
+```csharp
 public class Product {
     public string Id { get; set; }
     public string Name { get; set; }
@@ -23,7 +23,7 @@ You can ignore members annotated with any attributes by using the `IgnoreAttribu
 **Map to different name**  
 With `AdaptMember` attribute, you can specify name of source or target to be mapped. For example, if we would like to map `Id` to `Code`.
 
-```
+```csharp
 public class Product {
     [AdaptMember("Code")]
     public string Id { get; set; }
@@ -33,7 +33,7 @@ public class Product {
 
 **Map to non-public members**  
 You can also map non-public members with `AdaptMember` attribute.
-```
+```csharp
 public class Product {
     [AdaptMember]
     private string HiddenId { get; set; }
@@ -45,14 +45,18 @@ public class Product {
 
 You can rename member to be matched by `GetMemberName`. For example, if we would like to rename property based on `JsonProperty` attribute.
 
-    TypeAdapterConfig.GlobalSettings.Default
-        .GetMemberName(member => member.GetCustomAttributes(true)
-                                       .OfType<JsonPropertyAttribute>()
-                                       .FirstOrDefault()?.PropertyName);  //if return null, property will not be renamed
+```csharp
+TypeAdapterConfig.GlobalSettings.Default
+    .GetMemberName(member => member.GetCustomAttributes(true)
+                                    .OfType<JsonPropertyAttribute>()
+                                    .FirstOrDefault()?.PropertyName);  //if return null, property will not be renamed
+```
 
 ### Include custom attributes
 
 And if we would like to include non-public members decorated with `JsonProperty` attribute, we can do it by `IncludeAttribute`.
 
-    TypeAdapterConfig.GlobalSettings.Default
-        .IncludeAttribute(typeof(JsonPropertyAttribute));
+```csharp
+TypeAdapterConfig.GlobalSettings.Default
+    .IncludeAttribute(typeof(JsonPropertyAttribute));
+```

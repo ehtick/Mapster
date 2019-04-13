@@ -2,7 +2,7 @@
 
 Converting between primitive types (ie. int, bool, double, decimal) is supported, including when those types are nullable. For all other types, if you can cast types in c#, you can also cast in Mapster.
 ```csharp
-    decimal i = 123.Adapt<decimal>(); //equal to (decimal)123;
+decimal i = 123.Adapt<decimal>(); //equal to (decimal)123;
 ```
 ### Enums
 
@@ -11,27 +11,27 @@ The default Enum.ToString() in .Net is quite slow. The implementation in Mapster
 
 In Mapster, flagged enums are also supported.
 ```csharp
-    var e = "Read, Write, Delete".Adapt<FileShare>();  
-    //FileShare.Read | FileShare.Write | FileShare.Delete
+var e = "Read, Write, Delete".Adapt<FileShare>();  
+//FileShare.Read | FileShare.Write | FileShare.Delete
 ```
 For enum to enum with different type, by default, Mapster will map enum by value. You can override to map enum by name by:
 ```csharp
-    TypeAdapterConfig.GlobalSettings.Default
-        .EnumMappingStrategy(EnumMappingStrategy.ByName);
+TypeAdapterConfig.GlobalSettings.Default
+    .EnumMappingStrategy(EnumMappingStrategy.ByName);
 ```
 ### Strings
 
 When Mapster maps other types to string, Mapster will use `ToString` method. And when ever Mapster maps string to the other types, Mapster will use `Parse` method.
 ```csharp
-    var s = 123.Adapt<string>(); //equal to 123.ToString();
-    var i = "123".Adapt<int>();  //equal to int.Parse("123");
+var s = 123.Adapt<string>(); //equal to 123.ToString();
+var i = "123".Adapt<int>();  //equal to int.Parse("123");
 ```
 ### Collections
 
 This includes mapping among lists, arrays, collections, dictionary including various interfaces: IList<T>, ICollection<T>, IEnumerable<T> etc...
 ```csharp
-    var list = db.Pocos.ToList();
-    var target = list.Adapt<IEnumerable<Dto>>();  
+var list = db.Pocos.ToList();
+var target = list.Adapt<IEnumerable<Dto>>();  
 ```
 ### Mappable Objects
 
@@ -42,34 +42,29 @@ Mapster can map 2 different objects using the following rules
 
 Example:
 ```csharp
-    class Staff {
-        public string Name { get; set; }
-        public int GetAge() { return (DateTime.Now - this.BirthDate).TotalDays / 365.25; }
-        public Staff Supervisor { get; set; }
-        ...
+class Staff {
+    public string Name { get; set; }
+    public int GetAge() { 
+        return (DateTime.Now - this.BirthDate).TotalDays / 365.25; 
     }
+    public Staff Supervisor { get; set; }
+    ...
+}
 
-    struct StaffDto {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string SupervisorName { get; set; }
-    }
+struct StaffDto {
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public string SupervisorName { get; set; }
+}
 
-    var dto = staff.Adapt<StaffDto>();  
-    //dto.Name = staff.Name, dto.Age = staff.GetAge(), dto.SupervisorName = staff.Supervisor.Name
+var dto = staff.Adapt<StaffDto>();  
+//dto.Name = staff.Name, dto.Age = staff.GetAge(), dto.SupervisorName = staff.Supervisor.Name
 ```
-
-You can make custom mapping logic by
-- Setting custom mapping (https://github.com/MapsterMapper/Mapster/wiki/Custom-mapping)
-- Setting custom naming convention (https://github.com/MapsterMapper/Mapster/wiki/Naming-convention)
-- Setting by attributes (https://github.com/MapsterMapper/Mapster/wiki/Setting-by-attributes)
-- Ignoring members (https://github.com/MapsterMapper/Mapster/wiki/Ignoring-members)
-- Setting rule based mapping (https://github.com/MapsterMapper/Mapster/wiki/Rule-based-member-mapping)
 
 Mappable Object types are included:
 - POCO classes
 - POCO structs
-- Dictionary type implement IDictionary<string, T>
+- Dictionary type implement `IDictionary<string, T>`
 - Record types
 
 Example for object to dictionary

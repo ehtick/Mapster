@@ -3,42 +3,52 @@ To validate your mapping in unit tests and in order to help with "Fail Fast" sit
 ### Explicit Mapping
 Forcing all classes to be explicitly mapped:
 
-    //Default is "false"
-    TypeAdapterConfig.GlobalSettings.RequireExplicitMapping = true;
-    //This means you have to have an explicit configuration for each class, even if it's just:
-    TypeAdapterConfig<Source, Destination>.NewConfig();
+```csharp
+//Default is "false"
+TypeAdapterConfig.GlobalSettings.RequireExplicitMapping = true;
+//This means you have to have an explicit configuration for each class, even if it's just:
+TypeAdapterConfig<Source, Destination>.NewConfig();
+```
 
 ### Checking Destination Member
 Forcing all destination properties to have a corresponding source member or explicit mapping/ignore:
 
-    //Default is "false"
-    TypeAdapterConfig.GlobalSettings.RequireDestinationMemberSource = true;
+```csharp
+//Default is "false"
+TypeAdapterConfig.GlobalSettings.RequireDestinationMemberSource = true;
+```
 
 ### Validating Mappings
 Both a specific TypeAdapterConfig<Source, Destination> or all current configurations can be validated. In addition, if Explicit Mappings (above) are enabled, it will also include errors for classes that are not registered at all with the mapper.
 
-    //Validate a specific config
-    var config = TypeAdapterConfig<Source, Destination>.NewConfig();
-    config.Compile();
+```csharp
+//Validate a specific config
+var config = TypeAdapterConfig<Source, Destination>.NewConfig();
+config.Compile();
 
-    //Validate globally
-    TypeAdapterConfig<Source, Destination>.NewConfig();
-    TypeAdapterConfig<Source2, Destination2>.NewConfig();
-    TypeAdapterConfig.GlobalSettings.Compile();
+//Validate globally
+TypeAdapterConfig<Source, Destination>.NewConfig();
+TypeAdapterConfig<Source2, Destination2>.NewConfig();
+TypeAdapterConfig.GlobalSettings.Compile();
+```
 
 ### Config Compilation
 Mapster will automatically compile mapping for first time usage.
 
-    var result = poco.Adapt<Dto>();
+```csharp
+var result = poco.Adapt<Dto>();
+```
 
 However, you can explicitly compile mapping by `Compile` method.
 
-    //Global config
-    TypeAdapterConfig.GlobalSettings.Compile();
-    
-    //Config instance
-    var config = new TypeAdapterConfig();
-    config.Compile();
+```csharp
+//Global config
+TypeAdapterConfig.GlobalSettings.Compile();
+
+//Config instance
+var config = new TypeAdapterConfig();
+config.Compile();
+```
 
 After compile, when you change setting in config, it will generate errors. Therefore, make sure you finish configuration before calling `Compile`. 
 
