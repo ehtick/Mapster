@@ -16,8 +16,16 @@ public class Product {
 
 You can ignore members annotated with any attributes by using the `IgnoreAttribute` method.
 
-    TypeAdapterConfig.GlobalSettings.Default
-        .IgnoreAttribute(typeof(JsonIgnoreAttribute));
+```csharp
+TypeAdapterConfig.GlobalSettings.Default
+    .IgnoreAttribute(typeof(JsonIgnoreAttribute));
+```
+
+However `IgnoreAttribute` will ignore both source and destination. If you would like to ignore only one side, you can use `IgnoreMember`.
+
+```csharp
+config.IgnoreMember((member, side) => member.HasCustomAttribute(typeof(NotMapAttribute)) && side == MemberSide.Source);
+```
 
 ### AdaptMember attribute
 **Map to different name**  
