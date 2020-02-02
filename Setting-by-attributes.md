@@ -96,4 +96,4 @@ public class Order {
 }
 ```
 
-See more detail at https://github.com/MapsterMapper/Mapster/wiki/Use-existing-prop
+See more detail at https://github.com/MapsterMapper/Mapster/wiki/Use-existing-value
