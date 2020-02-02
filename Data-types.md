@@ -64,8 +64,9 @@ var dto = staff.Adapt<StaffDto>();
 Mappable Object types are included:
 - POCO classes
 - POCO structs
+- POCO interfaces
 - Dictionary type implement `IDictionary<string, T>`
-- Record types
+- Record types (either class, struct, and interface)
 
 Example for object to dictionary
 
