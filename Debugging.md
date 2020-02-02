@@ -2,7 +2,7 @@
 
     PM> Install-Package ExpressionDebugger
 
-This plugin allow you to perform step-into debugging using Roslyn!
+This plugin allows you to perform step-into debugging using Roslyn!
 
 ##### Usage
 
