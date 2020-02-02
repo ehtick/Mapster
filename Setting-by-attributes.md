@@ -12,6 +12,20 @@ public class Product {
 }
 ```
 
+`[AdaptIgnore]` will both ignore when type are used as source or destination. You can ignore only one side by passing `MemberSide`.
+
+```csharp
+public class Product {
+    public string Id { get; set; }
+    public string Name { get; set; }
+
+    [AdaptIgnore(MemberSide.Source)]
+    public decimal Price { get; set; }
+}
+```
+
+Above example, `Price` will be ignored only when `Product` is used as source.
+
 ### Ignore custom attributes
 
 You can ignore members annotated with any attributes by using the `IgnoreAttribute` method.
@@ -68,3 +82,18 @@ And if we would like to include non-public members decorated with `JsonProperty`
 TypeAdapterConfig.GlobalSettings.Default
     .IncludeAttribute(typeof(JsonPropertyAttribute));
 ```
+
+### Use destination value
+
+You can tell Mapster to use existing property object to map data rather than create new object.
+
+```csharp
+public class Order {
+    public string Id { get; set; }
+
+    [UseDestinationValue]
+    public ICollection<OrderItem> Items { get; } = new List<OrderItem>();
+}
+```
+
+See more detail at https://github.com/MapsterMapper/Mapster/wiki/Use-existing-prop
