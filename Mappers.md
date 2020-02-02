@@ -3,16 +3,31 @@
 You can simply call `Adapt` method from anywhere.
 
 ```csharp
-var destObject = sourceObject.Adapt<TSource, TDestination>();
+var dest = src.Adapt<TSource, TDestination>();
 ```
 
 or just
 
 ```csharp
-var destObject = sourceObject.Adapt<TDestination>();
+var dest = src.Adapt<TDestination>();
 ```
 
-You might notice that there are 2 extension methods doing the same thing. In fact, `sourceObject.Adapt<TSource, TDestination>` is a bit better in term of performance (different is just casting from object type). If your application doesn't require high performance, you can just use `sourceObject.Adapt<TDestination>` signature. 
+2 extension methods are doing the same thing. `src.Adapt<TDestination>` will cast `src` to object. Therefore, if you map value type, please use `src.Adapt<TSource, TDestination>` to avoid boxing and unboxing.
+
+### Mapper instance
+
+In some cases, you need an instance of a mapper (or a factory function) to pass into a DI container. Mapster has
+the `IMapper` and `Mapper` to fill this need:
+
+```csharp
+IMapper mapper = new Mapper();
+```
+
+And usage `Map` method to perform mapping.
+
+```csharp
+var result = mapper.Map<TDestination>(source);
+```
 
 ### Builder
 
@@ -24,33 +39,10 @@ var dto = poco.BuildAdapter()
               .AdaptToType<SimpleDto>();
 ```
 
-Or we can see how Mapster generate mapping logic with Debugger plugin (https://github.com/MapsterMapper/Mapster/wiki/Debugging).
+Or if you use mapper instance, you can create builder by method `From`.
 
 ```csharp
-var script = poco.BuildAdapter()
-                .CreateMapExpression<SimpleDto>()
-                .ToScript();
-```
-
-Or we can map to EF6 object context (https://github.com/MapsterMapper/Mapster/wiki/EF6).
-
-```csharp
-var poco = dto.BuildAdapter()
-              .CreateEntityFromContext(db)
-              .AdaptToType<DomainPoco>();
-```
-
-### Mapper instance
-
-In some cases, you need an instance of a mapper (or a factory function) to pass into a DI container. Mapster has
-the IAdapter and Adapter to fill this need:
-
-```csharp
-IAdapter adapter = new Adapter();
-```
-
-And usage is the same as with the static methods.
-
-```csharp
-var result = adapter.Adapt<TDestination>(source);
+var dto = mapper.From(poco)
+              .AddParameters("user", this.User.Identity.Name)
+              .AdaptToType<SimpleDto>();
 ```
