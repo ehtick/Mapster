@@ -67,35 +67,35 @@ From above example, if `src.Child` is null, mapping will return null instead of 
 
 ### Multiple sources
 
-**Example 1**: Mapping Dto+SubDto to Poco
+**Example 1**: Include property to Poco
 
 ```csharp
 public class SubDto
 {
-    public string Extras { get; set; }
+    public string Extra { get; set; }
 }
 public class Dto
 {
     public string Name { get; set; }
-    public SubDto Details { get; set; }
+    public SubDto SubDto { get; set; }
 }
 public class Poco
 {
     public string Name { get; set; }
-    public string Extras { get; set; }
+    public string Extra { get; set; }
 }
 ```
 
-To configure Dto+SubDto to poco
+In this case, you would like to map all properties from `Dto` to `Poco`, and also include all properties from `Dto.SubDto` to `Poco`. You can do this by just mapping `dto.SubDto` to `poco` in configuration.
 
 ```csharp
 TypeAdapterConfig<Dto, Poco>.NewConfig()
-    .Map(dest => dest, src => src.Details);
+    .Map(poco => poco, dto => dto.SubDto);
 ```
 
-**Example 2**: 2 different dto to poco
+**Example 2**: Mapping 2 objects to poco
 
-You can use tuple to do this
+In this example, you have `Dto1` and `Dto2`, and you would like to map both objects to a `Poco`. You can do this by wrap `Dto1` and `Dto2` into tuple. And then mapping `tuple.Item1` and `tuple.Item2` to `Poco`.
 
 ```csharp
 TypeAdapterConfig<(Dto1, Dto2), Poco>.NewConfig()
