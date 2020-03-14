@@ -23,6 +23,11 @@ TypeAdapterConfig<TSource, TDestination>.NewConfig()
         .AddDestinationTransforms((string x) => x ?? "");
 ```
 
+**Return empty collection if null**
+```csharp
+config.Default.AddDestinationTransform(DestinationTransform.EmptyCollectionIfNull);
+```
+
 ### Passing run-time value
 
 In some cases, you might would like to pass runtime values (ie, current user). On configuration, we can receive run-time value by `MapContext.Current.Parameters`.
