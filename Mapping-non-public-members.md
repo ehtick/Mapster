@@ -1,13 +1,13 @@
-### EnableNonPublicMember
+### EnableNonPublicMembers
 
 This will allow Mapster to set to all non-public members.
 
 ```csharp
 //type pair
-TypeAdapterConfig<Poco, Dto>.NewConfig().EnableNonPublicMember(true);
+TypeAdapterConfig<Poco, Dto>.NewConfig().EnableNonPublicMembers(true);
 
 //global
-TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMember(true);
+TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMembers(true);
 ```
 
 ### AdaptMember attribute
@@ -48,6 +48,6 @@ TypeAdapterConfig.GlobalSettings.Default
 If type doesn't contain public properties, Mapster will treat type as primitive, you must also declare type pair to ensure Mapster will apply non-public member mapping.
 
 ```csharp
-TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMember(true);
+TypeAdapterConfig.GlobalSettings.Default.EnableNonPublicMembers(true);
 TypeAdapterConfig<PrivatePoco, PrivateDto>.NewConfig();
 ```
