@@ -1,5 +1,4 @@
-### Getting Started 
-### FWIW YOU SHOULD RESTRICT THE ACCESS TO THE MODIFICATION OF THE CONTENT. OTHERWISE IT MAY NOT BE CONSIDERED CREDIBLE.
+### Getting Started
 
 ##### [References](https://github.com/MapsterMapper/Mapster/wiki)
 ##### Mapping
