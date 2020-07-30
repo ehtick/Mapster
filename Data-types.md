@@ -28,7 +28,7 @@ var i = "123".Adapt<int>();  //equal to int.Parse("123");
 ```
 ### Collections
 
-This includes mapping among lists, arrays, collections, dictionary including various interfaces: IList<T>, ICollection<T>, IEnumerable<T> etc...
+This includes mapping among lists, arrays, collections, dictionary including various interfaces: `IList<T>`, `ICollection<T>`, `IEnumerable<T>`, `ISet<T>`, `IDictionary<TKey, TValue>` etc...
 ```csharp
 var list = db.Pocos.ToList();
 var target = list.Adapt<IEnumerable<Dto>>();  
