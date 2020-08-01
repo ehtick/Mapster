@@ -32,7 +32,19 @@ public interface ICustomerMapper
 }
 ```
 
-At this point, you can use your interface in your code.
+If you have configuration, it must be in `IRegister`
+
+```csharp
+public class MyRegister : IRegister
+{
+    public void Register(TypeAdapterConfig config)
+    {
+        config.NewConfig<TSource, TDestination>();
+    }
+}
+```
+
+At this point, you can use your interface in your code to perform mapping.
 
 ```csharp
 var dtos = context.Customers.Select(mapper.ProjectToDto);
@@ -68,3 +80,8 @@ NOTE: the tool required .NET Core 2.1 or .NET Core 3.1 on your machine.
 ```
 
 That's it, now Mapster will automatically generate codes after build.
+
+#### Example
+
+You can find example in Benchmark project
+- https://github.com/MapsterMapper/Mapster/tree/master/src/Benchmark/Mappers
