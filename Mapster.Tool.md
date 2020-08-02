@@ -52,7 +52,7 @@ var dto = mapper.MapToDto(poco);
 mapper.MapToExisting(dto, poco);
 ```
 
-2. Install `Mapster.Tool`
+2. Install `Mapster.Tool` from your project root
 
 ```bash
 #skip this step if you already have dotnet-tools.json
