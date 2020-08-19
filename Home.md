@@ -40,7 +40,7 @@
 | `config.RequireExplicitMapping` | Validate all type pairs are defined | [config validation](https://github.com/MapsterMapper/Mapster/wiki/Config-validation-&-compilation) |
 | `config.AllowImplicitDestinationInheritance` | Use config from destination based class | [inheritance](https://github.com/MapsterMapper/Mapster/wiki/Config-inheritance) |
 | `config.AllowImplicitSourceInheritance` | Use config from source based class | [inheritance](https://github.com/MapsterMapper/Mapster/wiki/Config-inheritance) |
-| `config.SelfContainedCodeGeneration` | Generate all nested mapping in 1 method | [code gen](https://github.com/MapsterMapper/Mapster/wiki/CodeGen) |
+| `config.SelfContainedCodeGeneration` | Generate all nested mapping in 1 method | [TextTemplate](https://github.com/MapsterMapper/Mapster/wiki/TextTemplate) |
 | `config.Compile()` | Validate mapping instruction & cache | [config validation](https://github.com/MapsterMapper/Mapster/wiki/Config-validation-&-compilation) |
 | `config.CompileProjection()` | Validate mapping instruction & cache for queryable |  |
 | `config.Clone()` | Copy config | [config instance](https://github.com/MapsterMapper/Mapster/wiki/Config-instance) |
@@ -107,6 +107,8 @@
 | `[AdaptMember(name)]` | Mapping property to different name | [attribute](https://github.com/MapsterMapper/Mapster/wiki/Setting-by-attributes) |
 | `[AdaptIgnore(side)]` | Ignore property from mapping | [attribute](https://github.com/MapsterMapper/Mapster/wiki/Setting-by-attributes) |
 | `[UseDestinationValue]` | Use existing property object to map data | [attribute](https://github.com/MapsterMapper/Mapster/wiki/Setting-by-attributes) |
+| `[AdaptTo]` `[AdaptFrom]` `[AdaptTwoWays]` | Add setting on POCO class | [location](https://github.com/MapsterMapper/Mapster/wiki/Config-location#attributes) |
+| `[Mapper]` `[GeneratMapper]` `[PropertyType]` | Define setting for code generation | [Mapster.Tool](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool) |
 
 #### Plugins
 
