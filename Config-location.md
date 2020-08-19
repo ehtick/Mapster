@@ -100,3 +100,14 @@ config.Apply(registers);
 var register = new MockingRegister();
 config.Apply(register);
 ```
+
+### Attributes
+
+You can also set config together with your POCO classes. For example:
+
+```csharp
+[AdaptTo(typeof(StudentDto), PreserveReference = true)]
+public class Student { 
+    ...
+}
+```
