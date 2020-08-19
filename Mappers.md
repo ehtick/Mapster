@@ -46,3 +46,7 @@ var dto = mapper.From(poco)
               .AddParameters("user", this.User.Identity.Name)
               .AdaptToType<SimpleDto>();
 ```
+
+### Code generation
+
+See [Mapster.Tool](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool) for generating your specific mapper class, rather than using the provided mappers.
