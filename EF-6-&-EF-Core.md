@@ -32,7 +32,7 @@ _mapper.From(dto)
 ```
 
 #### EF Core ProjectToType
-`Mapster.EfCore` also allows `ProjectToType` from mapper instance.
+`Mapster.EFCore` also allows `ProjectToType` from mapper instance.
 
 ```csharp
 var query = db.Customers.Where(...);
