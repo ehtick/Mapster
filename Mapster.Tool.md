@@ -62,7 +62,7 @@ to clean up run following command:
 dotnet msbuild -t:CleanGenerated
 ```
 
-### Generate full type name
+#### Generate full type name
 
 If your POCOs and DTOs have the same name, you might need to generate using full type name, by add `-p` flag.
 ```xml
