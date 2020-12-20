@@ -17,6 +17,7 @@ And Mapster.Tool provides following options
 - -a: define input assembly
 - -n: define namespace of generated classes
 - -o: define output directory
+- -p: print full type name (if your DTOs/POCOs having the same name)
 
 ### csproj integration
 
@@ -64,7 +65,7 @@ dotnet msbuild -t:CleanGenerated
 
 #### Generate full type name
 
-If your POCOs and DTOs have the same name, you might need to generate using full type name, by add `-p` flag.
+If your POCOs and DTOs have the same name, you might need to generate using full type name, by adding `-p` flag.
 ```xml
   <Target Name="Mapster">
     <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet build" />
