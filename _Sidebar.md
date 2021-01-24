@@ -44,4 +44,6 @@
 ##### Tools
 * [Mapster.Tool](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool)
   * [Fluent API](https://github.com/MapsterMapper/Mapster/wiki/Fluent-API-Code-generation)
+  * [Attributes](https://github.com/MapsterMapper/Mapster/wiki/Attribute-base-Code-generation)
+  * [Interface](https://github.com/MapsterMapper/Mapster/wiki/Interface-base-Code-generation)
 * [TextTemplate](https://github.com/MapsterMapper/Mapster/wiki/TextTemplate)
