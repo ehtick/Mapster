@@ -122,7 +122,7 @@ Sample.CodeGen
 ### Generate DTOs and mapping codes
 
 There are 3 flavors, to generate DTOs and mapping codes
-- [Fluent API](https://github.com/MapsterMapper/Mapster/wiki/Fluent-API-Code-generation): if you don't want to touch your domain classes
+- [Fluent API](https://github.com/MapsterMapper/Mapster/wiki/Fluent-API-Code-generation): if you don't want to touch your domain classes, or generate DTOs from domain types in different assembly.
 - [Attributes](https://github.com/MapsterMapper/Mapster/wiki/Attribute-base-Code-generation): if you would like to keep mapping declaration closed to your domain classes.
 - [Interfaces](https://github.com/MapsterMapper/Mapster/wiki/Interface-base-Code-generation): if you already have DTOs, and you would like to define mapping through interfaces.
 
