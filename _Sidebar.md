@@ -1,5 +1,8 @@
 ### Getting Started
 
+##### Translation
+* [中文文档](https://github.com/rivenfx/Mapster-docs) (sp thx to [@staneee](https://github.com/staneee))
+
 ##### [References](https://github.com/MapsterMapper/Mapster/wiki)
 ##### Mapping
 * [Basic usages](https://github.com/MapsterMapper/Mapster/wiki/Basic-usages)
