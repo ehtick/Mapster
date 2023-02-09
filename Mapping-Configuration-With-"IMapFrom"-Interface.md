@@ -14,7 +14,7 @@ public class InheritedDestinationModel : IMapFrom<SourceModel>
     public void ConfigureMapping(TypeAdapterConfig config)
     {
         config.NewConfig<SourceModel, InheritedDestinationModel>()
-            .Map(dest => dest.Value, _ => DesireValues.Number);
+            .Map(dest => dest.Value, source => int.Parse(source.Value));
     }
 }
 ```
