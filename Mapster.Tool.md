@@ -134,6 +134,10 @@ If you get an error similar to `Unhandled exception. System.IO.FileNotFoundExcep
 
 **Workaround 1**
 
+Ensure that you are using Mapster.Tool version 8.4.2-pre01 or newer. 
+
+**Workaround 2**
+
 Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your csproj file as follows:
 
 ```xml
@@ -145,7 +149,7 @@ Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your cs
     [...]
 ```
 
-**Workaround 2**
+**Workaround 3**
 
 Change your `dotnet build` command to `dotnet build -p:CopyLocalLockFileAssemblies=true` as follows:
 
