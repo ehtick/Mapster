@@ -662,11 +662,6 @@ namespace Mapster
         {
             this.CheckCompiled();
 
-            if(typeof(TSource).IsMapsterPrimitive() || typeof(TDestination).IsMapsterPrimitive())
-            {
-                this.Settings.MapWithToPrimitive = true;
-            }
-
             if (applySettings)
             {
                 var adapter = new DelegateAdapter(converterFactory);

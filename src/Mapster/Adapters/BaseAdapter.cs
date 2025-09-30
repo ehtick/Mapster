@@ -85,32 +85,6 @@ namespace Mapster.Adapters
             if (CheckExplicitMapping && arg.Context.Config.RequireExplicitMapping && !arg.ExplicitMapping)
                 throw new InvalidOperationException("Implicit mapping is not allowed (check GlobalSettings.RequireExplicitMapping) and no configuration exists");
 
-            #region CustomMappingPrimitiveImplimentation
-
-            if (arg.Settings.MapToTargetPrimitive == true)
-            {
-                Expression dest;
-
-                if (destination == null)
-                {
-                    dest = arg.DestinationType.CreateDefault();
-                }
-                else
-                    dest = destination;
-
-                var customConvert = arg.Context.Config.CreateMapToTargetInvokeExpressionBody(source.Type, arg.DestinationType, source, dest);
-
-                arg.MapType = MapType.MapToTarget;
-                return customConvert;
-            }
-
-            if (arg.Settings.MapWithToPrimitive == true)
-            {
-                return arg.Context.Config.CreateMapInvokeExpressionBody(source.Type, arg.DestinationType, source);
-            }
-
-            #endregion CustomMappingPrimitiveImplimentation
-
             var oldMaxDepth = arg.Context.MaxDepth;
             var oldDepth = arg.Context.Depth;
             try
@@ -128,11 +102,18 @@ namespace Mapster.Adapters
                         arg.Context.Depth++;
                 }
 
-                if (CanInline(source, destination, arg))
+                if(arg.Settings.MapToTargetPrimitive == true)
                 {
-                    var exp = CreateInlineExpressionBody(source, arg);
-                    if (exp != null)
-                        return exp.To(arg.DestinationType, true);
+                    // skip inline mapping
+                }
+                else
+                {
+                    if (CanInline(source, destination, arg))
+                    {
+                        var exp = CreateInlineExpressionBody(source, arg);
+                        if (exp != null)
+                            return exp.To(arg.DestinationType, true);
+                    }
                 }
 
                 if (arg.Context.Running.Count > 1 && 
