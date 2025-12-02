@@ -8,7 +8,7 @@
 * [Basic usages](https://github.com/MapsterMapper/Mapster/wiki/Basic-usages)
 * [Mappers](https://github.com/MapsterMapper/Mapster/wiki/Mappers)
 * [Data types](https://github.com/MapsterMapper/Mapster/wiki/Data-types)
-* [Mapping with interface](https://github.com/MapsterMapper/Mapster/wiki/Mapping-Configuration-With-%22IMapFrom%22-Interface)
+* [Mapping with interface](https://github.com/MapsterMapper/Mapster/wiki/Mapping-Configuration-With-IMapFrom-Interface)
 
 ##### Configuration
 * [Configuration](https://github.com/MapsterMapper/Mapster/wiki/Configuration)
