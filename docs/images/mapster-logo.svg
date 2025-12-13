@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="38.000000pt"
+   height="38.000000pt"
+   viewBox="0 0 172.000000 172.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg1"
+   sodipodi:docname="mapster-logo2.svg"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     inkscape:zoom="11.921053"
+     inkscape:cx="23.865342"
+     inkscape:cy="31.456954"
+     inkscape:window-width="3440"
+     inkscape:window-height="1417"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <g
+     id="g1"
+     transform="translate(11.856321,13.176444)">
+    <title
+       id="title1">Layer 1</title>
+    <path
+       fill="#ff6f00"
+       stroke="null"
+       stroke-width="null"
+       stroke-opacity="null"
+       fill-opacity="null"
+       opacity="0.5"
+       d="M 24.33823,20.1519"
+       id="svg_5" />
+    <g
+       id="svg_6">
+      <g
+         id="svg_4">
+        <path
+           d="m 97.41211,18.98121 6.8834,3.72029 c -9.03107,9.94987 -5.72575,6.08433 -10.98467,11.73541 -8.36381,-6.27286 -17.95322,-7.62887 -28.1875,-6.5 -11.98152,2.0929 -22.39668,7.86627 -29.45313,17.8125 -7.32048,11.37162 -7.77063,21.55778 -7.35937,34.6875 -16.08564,3.05507 5.66715,-1.07895 -14.13023,2.64628 -2.15727,-13.0656 0.76717,-27.78594 6.63023,-39.27128 8.00304,-14.72937 20.71517,-23.458 36.5,-28.375 13.0255,-3.68691 27.98678,-1.99777 40.10127,3.5443 z"
+           fill="#ff6f00"
+           id="svg_2" />
+        <path
+           fill="#ff6f00"
+           stroke-width="null"
+           stroke-opacity="null"
+           fill-opacity="null"
+           d="m 88.93696,51.57536 -6.13363,-39.04648 38.64745,8.28398 -8.12845,7.69063 -16.25691,15.38125 -8.12845,7.69063 z"
+           id="svg_3"
+           stroke="null"
+           transform="rotate(175.50317,102.12706,32.052124)" />
+      </g>
+      <g
+         transform="rotate(1.7815756,79.106293,99.706421)"
+         id="svg_9">
+        <path
+           transform="rotate(-178.74681,88.017891,99.669983)"
+           d="m 126.54638,70.37252 6.8834,3.72029 c -9.03107,9.94987 -5.72575,6.08433 -10.98467,11.73541 -8.36381,-6.27286 -17.95322,-7.62887 -28.1875,-6.5 -11.98152,2.0929 -22.39668,7.86627 -29.45313,17.8125 -7.32048,11.37162 -7.77063,21.55778 -7.35937,34.6875 -16.08564,3.05507 5.66715,-1.07895 -14.13023,2.64628 -2.15727,-13.0656 0.76717,-27.78594 6.63023,-39.27128 8.00304,-14.72937 20.71517,-23.458 36.5,-28.375 13.0255,-3.68691 27.98678,-1.99777 40.10127,3.5443 z"
+           fill="#ff6f00"
+           id="svg_7" />
+        <path
+           fill="#ff6f00"
+           stroke-width="null"
+           stroke-opacity="null"
+           fill-opacity="null"
+           d="m 31.23983,134.47013 -6.13363,-39.04648 38.64745,8.28398 -8.12845,7.69063 -16.25691,15.38125 -8.12845,7.69063 z"
+           id="svg_8"
+           stroke="null"
+           transform="rotate(-3.2436371,44.429935,114.9469)" />
+      </g>
+    </g>
+  </g>
+</svg>

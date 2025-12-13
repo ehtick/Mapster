@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+- name: Constructor mapping
+  uid: Mapster.Settings.ConstructorMapping
+  href: Constructor-mapping.md
+- name: Before & after mapping
+  uid: Mapster.Settings.BeforeAfterMapping
+  href: Before-after-mapping.md
+- name: Setting values
+  uid: Mapster.Settings.SettingValues
+  href: Setting-values.md
+- name: Shallow & merge mapping
+  uid: Mapster.Settings.ShallowMerge
+  href: Shallow-merge.md
+- name: Recursive & object references
+  uid: Mapster.Settings.ObjectReferences
+  href: Object-references.md
+- name: Custom conversion logic
+  uid: Mapster.Settings.CustomConversionLogic
+  href: Custom-conversion-logic.md
+- name: Custom member matching logic
+  href: custom/toc.yml

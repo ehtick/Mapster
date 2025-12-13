@@ -131,6 +131,9 @@ packages/
 # This line needs to be after the ignore of the build folder (and the packages folder if the line above has been uncommented)
 !packages/build/
 
+# Not ignore packages folder in docs folder
+!docs/articles/packages/
+
 # Windows Azure Build Output
 csx/
 *.build.csdef
@@ -184,5 +187,4 @@ src/.idea
 
 # VS Code settings
 .vscode/launch.json
-.vscode/settings.json
 .vscode/tasks.json

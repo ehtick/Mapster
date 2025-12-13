@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+- name: Custom mapping
+  uid: Mapster.Settings.Custom.Mapping
+  href: Custom-mapping.md
+- name: Custom naming convention
+  uid: Mapster.Settings.Custom.NamingConvention
+  href: Naming-convention.md
+- name: Setting by attributes
+  uid: Mapster.Settings.Custom.Attributes
+  href: Setting-by-attributes.md
+- name: Ignoring members
+  uid: Mapster.Settings.Custom.IgnoringMembers
+  href: Ignoring-members.md
+- name: Rule-based member matching
+  uid: Mapster.Settings.Custom.RuleBasedMapping
+  href: Rule-based-member-mapping.md
+- name: Mapping readonly prop
+  uid: Mapster.Settings.Custom.ReadonlyProperty
+  href: Mapping-readonly-prop.md
+- name: Mapping non-public members
+  uid: Mapster.Settings.Custom.NonPublicMembers
+  href: Mapping-non-public-members.md
+- name: Two ways & unflattening mapping
+  uid: Mapster.Settings.Custom.TwoWaysMapping
+  href: Two-ways.md
