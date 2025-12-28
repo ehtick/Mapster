@@ -1,7 +1,7 @@
 <Project >
 	<PropertyGroup>
-		<!-- Properties related to benchmark builds -->
-        <IsPackable>false</IsPackable>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>Mapster.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='nuget-bench'">
 		<Optimize>true</Optimize>
