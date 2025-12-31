@@ -462,6 +462,50 @@ namespace Mapster.Tests
             result.LastName.ShouldBe(source.LastName);
         }
 
+        /// <summary>
+        /// https://github.com/MapsterMapper/Mapster/issues/842
+        /// </summary>
+        [TestMethod]
+        public void ClassCtorAutomapingWorking()
+        {
+            var source = new TestRecord() { X = 100 };
+            var result = source.Adapt<AutoCtorDestX>();
+
+            result.X.ShouldBe(100);
+        }
+
+        /// <summary>
+        /// https://github.com/MapsterMapper/Mapster/issues/842
+        /// </summary>
+        [TestMethod]
+        public void ClassCustomCtorWitoutMapNotWorking()
+        {
+            TypeAdapterConfig.GlobalSettings.Clear();
+
+            var source = new TestRecord() { X = 100 };
+
+            Should.Throw<InvalidOperationException>(() => 
+            {
+                source.Adapt<AutoCtorDestYx>();
+            });
+        }
+
+        /// <summary>
+        /// https://github.com/MapsterMapper/Mapster/issues/842
+        /// </summary>
+        [TestMethod]
+        public void ClassCustomCtorWithMapWorking()
+        {
+            TypeAdapterConfig<TestRecord, AutoCtorDestYx>.NewConfig()
+                .Map("y", src => src.X);
+
+
+            var source = new TestRecord() { X = 100 };
+            var result = source.Adapt<AutoCtorDestYx>();
+
+            result.X.ShouldBe(100);
+        }
+
         #region NowNotWorking
 
         /// <summary>
@@ -867,6 +911,26 @@ namespace Mapster.Tests
     }
 
     sealed record TestSealedRecordPositional(int X);
+
+    class AutoCtorDestX
+    {
+        public AutoCtorDestX(int x) 
+        {
+            X = x;
+        }
+
+        public int X { get; }
+    }
+
+    class AutoCtorDestYx
+    {
+        public AutoCtorDestYx(int y)
+        {
+            X = y;
+        }
+
+        public int X { get; }
+    }
 
     #endregion TestClasses
 }

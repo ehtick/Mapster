@@ -440,5 +440,10 @@ namespace Mapster
                         
             return false;
         }
+
+        public static bool isDefaultCtor(this Type type)
+        {
+          return  type.GetConstructor(new Type[] { }) is not null ? true : false;
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace Mapster.Adapters
         {
             //new TDestination(src.Prop1, src.Prop2)
                         
-            if (arg.GetConstructUsing() != null || arg.Settings.MapToConstructor == null)
+            if (arg.DestinationType.isDefaultCtor() || arg.GetConstructUsing() != null && arg.Settings.MapToConstructor == null)
                 return base.CreateInstantiationExpression(source, destination, arg);
 
             ClassMapping? classConverter;
