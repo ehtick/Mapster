@@ -510,13 +510,13 @@ namespace Mapster.Tests
         /// https://github.com/MapsterMapper/Mapster/issues/842
         /// </summary>
         [TestMethod]
-        public void ClassCustomCtorInsaiderUpdateWorking()
+        public void ClassCustomCtorInsiderUpdateWorking()
         {
             TypeAdapterConfig<TestRecord, AutoCtorDestYx>.NewConfig()
                 .Map("y", src => src.X);
 
-            var source = new InsaiderData() { X = new TestRecord() { X = 100 } };
-            var destination = new InsaiderWithCtorDestYx(); // nullable insaider
+            var source = new InsiderData() { X = new TestRecord() { X = 100 } };
+            var destination = new InsiderWithCtorDestYx(); // null insider
             source.Adapt(destination);
 
             destination.X.X.ShouldBe(100);
@@ -949,12 +949,12 @@ namespace Mapster.Tests
         public int X { get; }
     }
 
-    class InsaiderData 
+    class InsiderData 
     {
         public TestRecord X { set; get; }
     }
 
-    class InsaiderWithCtorDestYx
+    class InsiderWithCtorDestYx
     {
         public AutoCtorDestYx X { set; get; }
     }
