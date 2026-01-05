@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Mapster.Adapters;
+using Mapster.Models;
+using Mapster.Utils;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Mapster.Adapters;
-using Mapster.Models;
-using Mapster.Utils;
 
 namespace Mapster
 {
+    [AdaptWith(AdaptDirectives.DestinationAsRecord)]
     public class TypeAdapterSetter
     {
         protected const string SourceParameterName = "source";
@@ -268,10 +269,29 @@ namespace Mapster
             return setter;
         }
 
-        internal static TSetter Include<TSetter>(this TSetter setter, Type sourceType, Type destType) where TSetter : TypeAdapterSetter
+        public static TSetter Include<TSetter>(this TSetter setter, Type sourceType, Type destType) where TSetter : TypeAdapterSetter
         {
             setter.CheckCompiled();
 
+            Type baseSourceType = setter.Settings.SourceType ?? typeof(void);
+            Type baseDestinationType = setter.Settings.DestinationType ?? typeof(void);
+
+            if (baseSourceType.IsOpenGenericType() && baseDestinationType.IsOpenGenericType())
+            {
+                if (!sourceType.IsAssignableToGenericType(baseSourceType))
+                    throw new InvalidCastException("In order to use inherits, TSource must be inherited from TBaseSource.");
+                if (!destType.IsAssignableToGenericType(baseDestinationType))
+                    throw new InvalidCastException("In order to use inherits, TDestination must be inherited from TBaseDestination.");
+            }
+            else
+            {
+                if (!baseSourceType.GetTypeInfo().IsAssignableFrom(sourceType.GetTypeInfo()))
+                    throw new InvalidCastException("In order to use inherits, TSource must be inherited from TBaseSource.");
+
+                if (!baseDestinationType.GetTypeInfo().IsAssignableFrom(destType.GetTypeInfo()))
+                    throw new InvalidCastException("In order to use inherits, TDestination must be inherited from TBaseDestination.");
+            }
+        
             setter.Config.Rules.LockAdd(new TypeAdapterRule
             {
                 Priority = arg =>
@@ -282,6 +302,36 @@ namespace Mapster
 
             setter.Settings.Includes.Add(new TypeTuple(sourceType, destType));
 
+            return setter;
+        }
+
+        public static TSetter Inherits<TSetter>(this TSetter setter, Type baseSourceType, Type baseDestinationType) where TSetter : TypeAdapterSetter
+        {
+            setter.CheckCompiled();
+                      
+            Type derivedSourceType = setter.Settings.SourceType ?? typeof(void);
+            Type derivedDestinationType = setter.Settings.DestinationType ?? typeof(void);
+
+            if(baseSourceType.IsOpenGenericType() && baseDestinationType.IsOpenGenericType())
+            {
+                if (!derivedSourceType.IsAssignableToGenericType(baseSourceType))
+                    throw new InvalidCastException("In order to use inherits, TSource must be inherited from TBaseSource.");
+                if (!derivedDestinationType.IsAssignableToGenericType(baseDestinationType))
+                    throw new InvalidCastException("In order to use inherits, TDestination must be inherited from TBaseDestination.");
+            }
+            else
+            {
+                if (!baseSourceType.GetTypeInfo().IsAssignableFrom(derivedSourceType.GetTypeInfo()))
+                    throw new InvalidCastException("In order to use inherits, TSource must be inherited from TBaseSource.");
+
+                if (!baseDestinationType.GetTypeInfo().IsAssignableFrom(derivedDestinationType.GetTypeInfo()))
+                    throw new InvalidCastException("In order to use inherits, TDestination must be inherited from TBaseDestination.");
+            }
+
+            if (setter.Config.RuleMap.TryGetValue(new TypeTuple(baseSourceType, baseDestinationType), out var rule))
+            {
+                setter.Settings.Apply(rule.Settings);
+            }
             return setter;
         }
 
@@ -634,6 +684,11 @@ namespace Mapster
         {
             this.CheckCompiled();
 
+            if (typeof(TSource).IsMapsterPrimitive() || typeof(TDestination).IsMapsterPrimitive())
+            {
+                this.Settings.MapToTargetPrimitive = true;
+            }
+
             if (applySettings)
             {
                 var adapter = new DelegateAdapter(converterFactory);
@@ -801,20 +856,8 @@ namespace Mapster
         {
             this.CheckCompiled();
 
-            Type baseSourceType = typeof(TBaseSource);
-            Type baseDestinationType = typeof(TBaseDestination);
+            return this.Inherits(typeof(TBaseSource), typeof(TBaseDestination));
 
-            if (!baseSourceType.GetTypeInfo().IsAssignableFrom(typeof(TSource).GetTypeInfo()))
-                throw new InvalidCastException("In order to use inherits, TSource must be inherited from TBaseSource.");
-
-            if (!baseDestinationType.GetTypeInfo().IsAssignableFrom(typeof(TDestination).GetTypeInfo()))
-                throw new InvalidCastException("In order to use inherits, TDestination must be inherited from TBaseDestination.");
-
-            if (Config.RuleMap.TryGetValue(new TypeTuple(baseSourceType, baseDestinationType), out var rule))
-            {
-                Settings.Apply(rule.Settings);
-            }
-            return this;
         }
 
         public TypeAdapterSetter<TSource, TDestination> Fork(Action<TypeAdapterConfig> action)

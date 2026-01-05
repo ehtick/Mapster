@@ -23,6 +23,7 @@ namespace Mapster
                 new PrimitiveAdapter().CreateRule(),    //-200
                 new ClassAdapter().CreateRule(),        //-150
                 new RecordTypeAdapter().CreateRule(),   //-149
+                new ReadOnlyInterfaceAdapter().CreateRule(), // -148
                 new CollectionAdapter().CreateRule(),   //-125
                 new DictionaryAdapter().CreateRule(),   //-124
                 new ArrayAdapter().CreateRule(),        //-123
@@ -81,6 +82,7 @@ namespace Mapster
 
         public bool RequireDestinationMemberSource { get; set; }
         public bool RequireExplicitMapping { get; set; }
+        public bool RequireExplicitMappingPrimitive { get; set; }
         public bool AllowImplicitDestinationInheritance { get; set; }
         public bool AllowImplicitSourceInheritance { get; set; } = true;
         public bool SelfContainedCodeGeneration { get; set; }
@@ -227,6 +229,10 @@ namespace Mapster
                 Rules.LockAdd(r);
                 return r;
             });
+
+            rule.Settings.SourceType = key.Source;
+            rule.Settings.DestinationType = key.Destination;
+
             return rule.Settings;
         }
 
@@ -494,7 +500,7 @@ namespace Mapster
 
         internal Expression CreateMapInvokeExpressionBody(Type sourceType, Type destinationType, Expression p)
         {
-            if (RequireExplicitMapping)
+            if (RequireExplicitMapping || RequireExplicitMappingPrimitive)
             {
                 var key = new TypeTuple(sourceType, destinationType);
                 _mapDict[key] = Compiler(CreateMapExpression(key, MapType.Map));
@@ -517,7 +523,7 @@ namespace Mapster
 
         internal Expression CreateMapToTargetInvokeExpressionBody(Type sourceType, Type destinationType, Expression p1, Expression p2)
         {
-            if (RequireExplicitMapping)
+            if (RequireExplicitMapping || RequireExplicitMappingPrimitive)
             {
                 var key = new TypeTuple(sourceType, destinationType);
                 _mapToTargetDict[key] = Compiler(CreateMapExpression(key, MapType.MapToTarget));

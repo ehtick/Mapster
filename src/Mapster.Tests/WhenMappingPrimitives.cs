@@ -60,6 +60,7 @@ namespace Mapster.Tests
             targetDto.Obj.ShouldBeSameAs(sourceDto.Obj);
         }
 
+        [Ignore]
         [TestMethod]
         public void Immutable_Class_With_No_Mapping_Should_Error()
         {

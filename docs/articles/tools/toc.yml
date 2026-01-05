@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+items:
+- name: Mapster Tool
+  topicHref: xref:Mapster.Tools.MapsterTool.Overview
+  href: mapster-tool/toc.yml
+- name: Text Template
+  uid: Mapster.Tools.TextTemplate
+  href: TextTemplate.md

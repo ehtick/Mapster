@@ -1,0 +1,77 @@
+name: Build and Deploy DocFX
+
+on:
+  push:
+    branches: [ 'master' ]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      # Uncomment this if API docs changes should trigger a rebuild of the documentation
+      # - 'src/**'
+      - '.github/workflows/build-deploy-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+      # - name: Show dotnet version
+      #   run: |
+      #     dotnet --list-sdks
+      #     dotnet --list-runtimes
+
+      # - name: Restore dependencies before docs deployment as recommended by docfx
+      #   run: dotnet restore ./src/Mapster.sln
+
+      # - name: Build with dotnet
+      #   run: dotnet build ./src/Mapster.sln
+
+      # - name: Run tests on .NET 9.0
+      #   run: dotnet test --verbosity normal ./src/Mapster.sln
+
+      - name: Install DocFX as .NET tool
+        run: |
+          dotnet tool update -g docfx
+
+      - name: Build docfx site
+        working-directory: docs
+        run: docfx docfx.json
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: 'docs/_site'
+
+  deploy-docs:
+    needs: build-docs
+    if: ${{ needs.build-docs.result == 'success' && github.ref == 'refs/heads/master' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

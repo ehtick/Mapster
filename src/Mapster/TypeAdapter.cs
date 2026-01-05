@@ -1,5 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
+using Mapster.Models;
 
 namespace Mapster
 {
@@ -21,7 +25,8 @@ namespace Mapster
         /// <typeparam name="TDestination">Destination type.</typeparam>
         /// <param name="source">Source object to adapt.</param>
         /// <returns>Adapted destination type.</returns>
-        public static TDestination Adapt<TDestination>(this object? source)
+        [return: NotNullIfNotNull(nameof(source))]
+        public static TDestination? Adapt<TDestination>(this object? source)
         {
             return Adapt<TDestination>(source, TypeAdapterConfig.GlobalSettings);
         }
@@ -33,14 +38,15 @@ namespace Mapster
         /// <param name="source">Source object to adapt.</param>
         /// <param name="config">Configuration</param>
         /// <returns>Adapted destination type.</returns>
-        public static TDestination Adapt<TDestination>(this object? source, TypeAdapterConfig config)
+        [return: NotNullIfNotNull(nameof(source))]
+        public static TDestination? Adapt<TDestination>(this object? source, TypeAdapterConfig config)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (source == null)
-                return default!;
+                return default;
             var type = source.GetType();
             var fn = config.GetDynamicMapFunction<TDestination>(type);
-            return fn(source);
+            return fn(source)!;
         }
 
         /// <summary>
@@ -93,8 +99,36 @@ namespace Mapster
         /// <returns>Adapted destination type.</returns>
         public static TDestination Adapt<TSource, TDestination>(this TSource source, TDestination destination, TypeAdapterConfig config)
         {
+            var sourceType = source?.GetType();
+            var destinationType = destination?.GetType();
+
+            if (sourceType == typeof(object)) // Infinity loop in ObjectAdapter if Runtime Type of source is Object 
+                return destination;
+
+            if (typeof(TSource) == typeof(object) || typeof(TDestination) == typeof(object))
+                if(sourceType != null && destinationType != null)
+                    return UpdateFuncFromPackedinObject(source, destination, config, sourceType, destinationType);
+                       
             var fn = config.GetMapToTargetFunction<TSource, TDestination>();
             return fn(source, destination);
+        }
+
+        private static TDestination UpdateFuncFromPackedinObject<TSource, TDestination>(TSource source, TDestination destination, TypeAdapterConfig config, Type sourceType, Type destinationType)
+        {
+            dynamic del = config.GetMapToTargetFunction(sourceType, destinationType);
+
+
+            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
+            {
+                dynamic objfn = del;
+                return objfn((dynamic)source, (dynamic)destination);
+            }
+            else
+            {
+                //NOTE: if type is non-public, we cannot use dynamic
+                //DynamicInvoke is slow, but works with non-public
+                return (TDestination)del.DynamicInvoke(source, destination);
+            }
         }
 
         /// <summary>
@@ -106,6 +140,12 @@ namespace Mapster
         /// <returns>Adapted destination type.</returns>
         public static object? Adapt(this object source, Type sourceType, Type destinationType)
         {
+            if (source != null &&
+                sourceType.IsOpenGenericType() && destinationType.IsOpenGenericType())
+            {
+                var arg = source.GetType().GetGenericArguments();
+                return Adapt(source, sourceType.MakeGenericType(arg), destinationType.MakeGenericType(arg), TypeAdapterConfig.GlobalSettings);
+            }
             return Adapt(source, sourceType, destinationType, TypeAdapterConfig.GlobalSettings);
         }
 
@@ -169,6 +209,96 @@ namespace Mapster
                 //DynamicInvoke is slow, but works with non-public
                 return del.DynamicInvoke(source, destination);
             }
+        }
+        
+        /// <summary>
+        /// Validate properties and Adapt the source object to the destination type.
+        /// </summary>
+        /// <typeparam name="TSource">Source type.</typeparam>
+        /// <typeparam name="TDestination">Destination type.</typeparam>
+        /// <param name="source">Source object to adapt.</param>
+        /// <returns>Adapted destination type.</returns>
+        public static TDestination ValidateAndAdapt<TSource, TDestination>(this TSource source)
+        {
+            var sourceType = typeof(TSource);
+            var selectorType = typeof(TDestination);
+
+            var sourceProperties = new HashSet<string>(sourceType.GetProperties().Select(p => p.Name));
+            var selectorProperties = new HashSet<string>(selectorType.GetProperties().Select(p=> p.Name));
+
+            foreach (var selectorProperty in selectorProperties)
+            {
+                if (sourceProperties.Contains(selectorProperty)) continue;
+                throw new Exception($"Property {selectorProperty} does not exist in {sourceType.Name} and is not configured in Mapster");
+            }
+            return source.Adapt<TDestination>();
+        }
+        
+        /// <summary>
+        /// Validate properties with configuration and Adapt the source object to the destination type.
+        /// </summary>
+        /// <typeparam name="TSource">Source type.</typeparam>
+        /// <typeparam name="TDestination">Destination type.</typeparam>
+        /// <param name="source">Source object to adapt.</param>
+        /// <param name="config">Configuration</param>
+        /// <returns>Adapted destination type.</returns>
+        public static TDestination ValidateAndAdapt<TSource, TDestination>(this TSource source, TypeAdapterConfig config)
+        {
+            var sourceType = typeof(TSource);
+            var selectorType = typeof(TDestination);
+
+            var sourceProperties = new HashSet<string>(sourceType.GetProperties().Select(p => p.Name));
+            var selectorProperties = new HashSet<string>(selectorType.GetProperties().Select(p=> p.Name));
+
+            // Get the rule map for the current types
+            var ruleMap = config.RuleMap;
+            var typeTuple = new TypeTuple(sourceType, selectorType);
+            ruleMap.TryGetValue(typeTuple, out var rule);
+
+            foreach (var selectorProperty in selectorProperties)
+            {
+                if (sourceProperties.Contains(selectorProperty)) continue;
+                // Check whether the adapter config has a config for the property
+                if (rule != null && rule.Settings.Resolvers.Any(r => r.DestinationMemberName.Equals(selectorProperty))) continue;
+                throw new Exception($"Property {selectorProperty} does not exist in {sourceType.Name} and is not configured in Mapster");
+            }
+            return source.Adapt<TDestination>(config);
+        }
+
+
+        /// <summary>
+        /// Adapt the source object to a destination type using a temporary configuration.
+        /// A new TypeAdapterConfig is created for this call, ensuring GlobalSettings remain unchanged.
+        /// Safe for init-only properties and record types.
+        /// </summary>
+        /// <typeparam name="TDestination">Destination type.</typeparam>
+        /// <param name="source">Source object to adapt.</param>
+        /// <param name="configAction">Action to customize the temporary config.</param>
+        /// <returns>Adapted destination object of type TDestination.</returns>
+        public static TDestination Adapt<TDestination>(this object? source, Action<TypeAdapterConfig> configAction)
+        {
+            var config = TypeAdapterConfig.GlobalSettings.Clone();
+            configAction(config);
+            return source.Adapt<TDestination>(config);
+        }
+
+        /// <summary>
+        /// Adapt the source object from TSource to TDestination using a dedicated TypeAdapterSetter.
+        /// A temporary TypeAdapterConfig is created and configured via the setter.
+        /// Safe for init-only properties and record types, without modifying GlobalSettings.
+        /// </summary>
+        /// <typeparam name="TSource">Source type.</typeparam>
+        /// <typeparam name="TDestination">Destination type.</typeparam>
+        /// <param name="source">Source object to adapt.</param>
+        /// <param name="configAction">Action to customize the TypeAdapterSetter.</param>
+        /// <returns>Adapted destination object of type TDestination.</returns>
+        public static TDestination Adapt<TSource, TDestination>(this object? source, Action<TypeAdapterSetter<TSource, TDestination>> configAction)
+        {
+            var config = TypeAdapterConfig.GlobalSettings.Clone();
+            var setter = config.ForType<TSource, TDestination>();
+            configAction(setter);
+            setter.Settings.Resolvers.Reverse();
+            return source.Adapt<TDestination>(config);
         }
     }
 

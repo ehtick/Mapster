@@ -1,4 +1,5 @@
-﻿using Mapster.Models;
+﻿using Mapster.Enums;
+using Mapster.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -6,8 +7,19 @@ using System.Linq.Expressions;
 
 namespace Mapster
 {
+    [AdaptWith(AdaptDirectives.DestinationAsRecord)]
     public class TypeAdapterSettings : SettingStore
     {
+        public Type? SourceType 
+        {
+            get => Get<Type>(nameof(SourceType));
+            set => Set(nameof(SourceType), value);
+        }
+        public Type? DestinationType
+        {
+            get => Get<Type>(nameof(DestinationType));
+            set => Set(nameof(DestinationType), value);
+        }
         public IgnoreDictionary Ignore
         {
             get => Get(nameof(Ignore), () => new IgnoreDictionary());
@@ -82,6 +94,34 @@ namespace Mapster
             get => Get<object>(nameof(GenerateMapper));
             set => Set(nameof(GenerateMapper), value);
         }
+
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        public bool? MapToPrimitive
+        {
+            get => Get(nameof(MapToPrimitive));
+            set => Set(nameof(MapToPrimitive), value);
+        }
+
+        public bool? MapToTargetPrimitive
+        {
+            get => Get(nameof(MapToTargetPrimitive));
+            set => Set(nameof(MapToTargetPrimitive), value);
+        }
+
+        public ProjectToTypeAutoMapping ProjectToTypeMapConfig
+        {
+            get => GetEnum(nameof(ProjectToTypeMapConfig), ()=> default(ProjectToTypeAutoMapping));
+            set => Set(nameof(ProjectToTypeMapConfig), value);
+        }
+
+        public  Dictionary<string,UnaryExpression> ProjectToTypeResolvers
+        {
+            get => Get(nameof(ProjectToTypeResolvers), () => new Dictionary<string, UnaryExpression>());
+            set => Set(nameof(ProjectToTypeResolvers), value);
+        }
+
 
         public List<Func<IMemberModel, MemberSide, bool?>> ShouldMapMember
         {

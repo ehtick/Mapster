@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Mapster.EFCore.Tests.Models;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mapster.EFCore.Tests
 {
@@ -46,6 +47,34 @@ namespace Mapster.EFCore.Tests
         }
 
         [TestMethod]
+        public async Task TestFindSingleObjectUsingProjectToType()
+        {
+            var options = new DbContextOptionsBuilder<SchoolContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
+                .Options;
+            var context = new SchoolContext(options);
+            DbInitializer.Initialize(context);
+
+            var mapsterInstance = new Mapper();
+
+            var query = context.Students.Where(s => s.ID == 1);
+
+            async Task<StudentDto> FirstExecute() =>
+                await mapsterInstance.From(query)
+                    .ProjectToType<StudentDto>()
+                    .FirstOrDefaultAsync();
+
+            await Should.NotThrowAsync(async () =>
+            {
+                var first = await FirstExecute();
+
+                first.ShouldNotBeNull();
+                first.ID.ShouldBe(1);
+                first.LastName.ShouldBe("Alexander");
+            });
+        }
+
+        [TestMethod]
         public void MapperInstance_From_OrderBy()
         {
             var options = new DbContextOptionsBuilder<SchoolContext>()
@@ -66,6 +95,27 @@ namespace Mapster.EFCore.Tests
 
             var last = orderedQuery.Last();
             last.LastName.ShouldBe("Olivetto");
+        }
+
+        [TestMethod]
+        public void MergeIncludeWhenUsingEFCoreProjectToType()
+        {
+            var options = new DbContextOptionsBuilder<SchoolContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
+                .Options;
+            var context = new SchoolContext(options);
+            DbInitializer.Initialize(context);
+
+            var mapsterInstance = new Mapper();
+
+            var query = context.Students
+                .Include(x => x.Enrollments.OrderByDescending(x => x.StudentID).Take(1))
+                .EFCoreProjectToType<StudentDto>();
+
+            var first = query.First();
+
+            first.Enrollments.Count.ShouldBe(1);
+            first.LastName.ShouldBe("Alexander");
         }
     }
 

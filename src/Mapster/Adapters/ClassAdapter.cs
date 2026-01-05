@@ -53,8 +53,8 @@ namespace Mapster.Adapters
         protected override Expression CreateInstantiationExpression(Expression source, Expression? destination, CompileArgument arg)
         {
             //new TDestination(src.Prop1, src.Prop2)
-
-            if (arg.GetConstructUsing() != null || arg.Settings.MapToConstructor == null)
+                        
+            if (arg.DestinationType.isDefaultCtor() || arg.GetConstructUsing() != null && arg.Settings.MapToConstructor == null)
                 return base.CreateInstantiationExpression(source, destination, arg);
 
             ClassMapping? classConverter;
@@ -69,19 +69,19 @@ namespace Mapster.Adapters
                 classConverter = destType.GetConstructors()
                     .OrderByDescending(it => it.GetParameters().Length)
                     .Select(it => GetConstructorModel(it, true))
-                    .Select(it => CreateClassConverter(source, it, arg))
+                    .Select(it => CreateClassConverter(source, it, arg, ctorMapping:true))
                     .FirstOrDefault(it => it != null);
             }
             else
             {
                 var model = GetConstructorModel(ctor, false);
-                classConverter = CreateClassConverter(source, model, arg);
+                classConverter = CreateClassConverter(source, model, arg, ctorMapping:true);
             }
 
             if (classConverter == null)
                 return base.CreateInstantiationExpression(source, destination, arg);
 
-            return CreateInstantiationExpression(source, classConverter, arg);
+            return CreateInstantiationExpression(source, classConverter, arg, destination);
         }
 
         protected override Expression CreateBlockExpression(Expression source, Expression destination, CompileArgument arg)
@@ -104,14 +104,22 @@ namespace Mapster.Adapters
             Dictionary<LambdaExpression, Tuple<List<Expression>, Expression>>? conditions = null;
             foreach (var member in members)
             {
-                if (!member.UseDestinationValue && member.DestinationMember.SetterModifier == AccessModifier.None)
-                    continue;
-
                 var destMember = arg.MapType == MapType.MapToTarget || member.UseDestinationValue
                     ? member.DestinationMember.GetExpression(destination)
                     : null;
 
                 var adapt = CreateAdaptExpression(member.Getter, member.DestinationMember.Type, arg, member, destMember);
+
+                if (!member.UseDestinationValue && member.DestinationMember.SetterModifier == AccessModifier.None)
+                {
+                    if (member.DestinationMember is PropertyModel && arg.MapType == MapType.MapToTarget)
+                        adapt = SetValueTypeAutoPropertyByReflection(member, adapt, classModel);
+                    else
+                        continue;
+                    if (adapt == Expression.Empty())
+                        continue;
+                }
+              
                 if (!member.UseDestinationValue)
                 {
                     if (arg.Settings.IgnoreNullValues == true && member.Getter.CanBeNull())
@@ -132,10 +140,14 @@ namespace Mapster.Adapters
                         //Todo Try catch block should be removed after pull request approved
                         try
                         {
-                            var destinationPropertyInfo = (PropertyInfo)member.DestinationMember.Info!;
-                            adapt = destinationPropertyInfo.IsInitOnly()
-                                ? SetValueByReflection(destination, (MemberExpression)adapt, arg.DestinationType)
-                                : member.DestinationMember.SetExpression(destination, adapt);
+                            if (member.DestinationMember.SetterModifier != AccessModifier.None)
+                            {
+                                var destinationPropertyInfo = (PropertyInfo)member.DestinationMember.Info!;
+                                adapt = destinationPropertyInfo.IsInitOnly()
+                                    ? SetValueByReflection(member, (MemberExpression)adapt)
+                                    : member.DestinationMember.SetExpression(destination, adapt);
+                            }
+
                         }
                         catch (Exception e)
                         {
@@ -178,22 +190,20 @@ namespace Mapster.Adapters
             return lines.Count > 0 ? (Expression)Expression.Block(lines) : Expression.Empty();
         }
 
-        private static Expression SetValueByReflection(Expression destination, MemberExpression adapt,
-            Type destinationType)
+        private static Expression SetValueByReflection(MemberMapping member, MemberExpression adapt)
         {
-            var memberName = adapt.Member.Name;
-            var typeofExpression = Expression.Constant(destinationType);
-            var getPropertyMethod = typeof(Type).GetMethod("GetProperty", new[] { typeof(string) })!;
+            var typeofExpression = Expression.Constant(member.Destination!.Type);
+            var getPropertyMethod = typeof(Type).GetMethod("GetProperty", new[] { typeof(string), typeof(Type) })!;
             var getPropertyExpression = Expression.Call(typeofExpression, getPropertyMethod,
-                Expression.Constant(memberName));
+                new[] { Expression.Constant(member.DestinationMember.Name), Expression.Constant(member.DestinationMember.Type) });
             var setValueMethod =
                 typeof(PropertyInfo).GetMethod("SetValue", new[] { typeof(object), typeof(object) })!;
             var memberAsObject = adapt.To(typeof(object));
             return Expression.Call(getPropertyExpression, setValueMethod,
-                new[] { destination, memberAsObject });
+                new[] { member.Destination, memberAsObject });
         }
 
-        protected override Expression? CreateInlineExpression(Expression source, CompileArgument arg)
+        protected override Expression? CreateInlineExpression(Expression source, CompileArgument arg, bool IsRequiredOnly = false)
         {
             //new TDestination {
             //  Prop1 = convert(src.Prop1),
@@ -203,9 +213,19 @@ namespace Mapster.Adapters
             var exp = CreateInstantiationExpression(source, arg);
             var memberInit = exp as MemberInitExpression;
             var newInstance = memberInit?.NewExpression ?? (NewExpression)exp;
-            var contructorMembers = newInstance.Arguments.OfType<MemberExpression>().Select(me => me.Member).ToArray();
-            var classModel = GetSetterModel(arg);
-            var classConverter = CreateClassConverter(source, classModel, arg);
+            var contructorMembers = newInstance.GetAllMemberExpressionsMemberInfo().ToArray();
+            ClassModel? classModel;
+            ClassMapping? classConverter;
+            if (IsRequiredOnly)
+            {
+                classModel = GetOnlyRequiredPropertySetterModel(arg);
+                classConverter = CreateClassConverter(source, classModel, arg, ctorMapping: true);
+            }
+            else
+            {
+                classModel = GetSetterModel(arg);
+                classConverter = CreateClassConverter(source, classModel, arg);
+            }
             var members = classConverter.Members;
 
             var lines = new List<MemberBinding>();

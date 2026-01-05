@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+# Side navigation for Configuration articles
+- name: Configuration Overview
+  uid: Mapster.Configuration.Overview
+  href: Configuration.md
+- name: Config inheritance
+  uid: Mapster.Configuration.Inheritance
+  href: Config-inheritance.md
+- name: Config Instance
+  uid: Mapster.Configuration.Instance
+  href: Config-instance.md
+- name: Config location
+  uid: Mapster.Configuration.Location
+  href: Config-location.md
+- name: Config validation & compilation
+  uid: Mapster.Configuration.ValidationAndCompilation
+  href: Config-validation-and-compilation.md
+- name: Config for nested mapping
+  uid: Mapster.Configuration.NestedMapping
+  href: Config-for-nested-mapping.md

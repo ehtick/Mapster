@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+- name: Basic usages
+  uid: Mapster.Mapping.BasicUsages
+  href: Basic-usages.md
+- name: Mappers
+  uid: Mapster.Mapping.Mappers
+  href: Mappers.md
+- name: Data types
+  uid: Mapster.Mapping.DataTypes
+  href: Data-types.md
+- name: Mapping with interface
+  uid: Mapster.Mapping.IMapFromInterface
+  href: Mapping-Configuration-With-IMapFrom-Interface.md

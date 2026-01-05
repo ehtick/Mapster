@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dotnet/docfx/main/schemas/toc.schema.json
+# NOTE: starting from here you can add side navigation items by nesting them under "items"
+items:
+- name: Mapping
+  href: mapping/toc.yml
+  topicHref: xref:Mapster.Mapping.BasicUsages
+- name: Configuration
+  href: configuration/toc.yml
+  topicHref: xref:Mapster.Configuration.Overview
+- name: Settings
+  href: settings/toc.yml
+  topicHref: xref:Mapster.Settings.Custom.Mapping
+- name: Packages
+  href: packages/toc.yml
+  topicHref: xref:Mapster.Packages.Async
+- name: Tools
+  href: tools/toc.yml
+  topicHref: xref:Mapster.Tools.MapsterTool.Overview
