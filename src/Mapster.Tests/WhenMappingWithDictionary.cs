@@ -274,8 +274,8 @@ namespace Mapster.Tests
             };
 
             var result = instanceWithDictionary.Adapt<OtherClassWithIntKeyDictionary>();
-            result.Dict.ShouldContainKey(1);
-            result.Dict.ShouldContainKey(100);
+            result.Dict.ContainsKey(1).ShouldBeTrue();
+            result.Dict.ContainsKey(100).ShouldBeTrue();
             result.Dict[1].Name.ShouldBe("one");
             result.Dict[100].Name.ShouldBe("one hundred");
         }

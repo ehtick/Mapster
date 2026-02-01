@@ -99,7 +99,10 @@ namespace Mapster
 
         public static IEnumerable<T> DropHiddenMembers<T>(this IEnumerable<T> allMembers, ICollection<MemberInfo> currentTypeMembers) where T : MemberInfo
         {
-            var compareMemberNames = allMembers.IntersectBy(currentTypeMembers.Select(x => x.Name), x => x.Name).Select(x => x.Name);
+            var compareMemberNames = LinqCompat.IntersectBy(
+                allMembers,
+                currentTypeMembers.Select(x => x.Name),
+                x => x.Name).Select(x => x.Name);
 
             foreach (var member in allMembers)
             {
@@ -407,8 +410,8 @@ namespace Mapster
             if (setMethod == null)
                 return false;
 
-            var isExternalInitType = typeof(System.Runtime.CompilerServices.IsExternalInit);
-            return setMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(isExternalInitType);
+            return setMethod.ReturnParameter.GetRequiredCustomModifiers()
+                .Any(it => it.FullName == "System.Runtime.CompilerServices.IsExternalInit");
         }
 
         public static bool IsAssignableToGenericType(this Type derivedType, Type genericType)

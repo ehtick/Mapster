@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net10.0;net9.0;net8.0;</TargetFrameworks>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
 		<IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
         <AssemblyName>Mapster.Tests</AssemblyName>
@@ -10,13 +10,18 @@
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <LangVersion>11.0</LangVersion>
     </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+        <TargetFrameworks>$(TargetFrameworks);net48</TargetFrameworks>
+    </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-        <PackageReference Include="MSTest.TestAdapter" Version="3.7.0" />
-        <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Shouldly" Version="4.2.1" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <PackageReference Include="System.Text.Json" Version="10.0.2" Condition="'$(TargetFramework)' == 'net48'" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ExpressionDebugger\ExpressionDebugger.csproj" />

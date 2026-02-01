@@ -20,17 +20,27 @@ public class InterfaceDynamicMapper
     {
         foreach (var type in _types)
         {
-            var instance = Activator.CreateInstance(type);
             var method = GetMethod(type);
-            method!.Invoke(instance, new object[] { _config });
+            if (method != null)
+            {
+                var instance = Activator.CreateInstance(type);
+                method.Invoke(instance, new object[] { _config });
+                continue;
+            }
+
+            var sourceType = type.GetInterfaces()
+                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>))
+                .GetGenericArguments()[0];
+            _config.NewConfig(sourceType, type);
         }
     }
 
-    private static MethodInfo GetMethod(Type type)
+    private static MethodInfo? GetMethod(Type type)
     {
         const string methodName = "ConfigureMapping";
         var method = type.GetMethod(methodName);
-        if (method == null) return type.GetInterface("IMapFrom`1")!.GetMethod(methodName)!;
+        if (method == null)
+            return null;
         var parameters = method.GetParameters();
         var condition = parameters.Length == 1 && parameters[0].ParameterType == typeof(TypeAdapterConfig);
         if (!condition)

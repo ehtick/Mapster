@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Mapster.Models;
+using Mapster.Utils;
 
 namespace Mapster
 {
@@ -25,7 +26,6 @@ namespace Mapster
         /// <typeparam name="TDestination">Destination type.</typeparam>
         /// <param name="source">Source object to adapt.</param>
         /// <returns>Adapted destination type.</returns>
-        [return: NotNullIfNotNull(nameof(source))]
         public static TDestination? Adapt<TDestination>(this object? source)
         {
             return Adapt<TDestination>(source, TypeAdapterConfig.GlobalSettings);
@@ -38,7 +38,6 @@ namespace Mapster
         /// <param name="source">Source object to adapt.</param>
         /// <param name="config">Configuration</param>
         /// <returns>Adapted destination type.</returns>
-        [return: NotNullIfNotNull(nameof(source))]
         public static TDestination? Adapt<TDestination>(this object? source, TypeAdapterConfig config)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
@@ -115,20 +114,9 @@ namespace Mapster
 
         private static TDestination UpdateFuncFromPackedinObject<TSource, TDestination>(TSource source, TDestination destination, TypeAdapterConfig config, Type sourceType, Type destinationType)
         {
-            dynamic del = config.GetMapToTargetFunction(sourceType, destinationType);
-
-
-            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
-            {
-                dynamic objfn = del;
-                return objfn((dynamic)source, (dynamic)destination);
-            }
-            else
-            {
-                //NOTE: if type is non-public, we cannot use dynamic
-                //DynamicInvoke is slow, but works with non-public
-                return (TDestination)del.DynamicInvoke(source, destination);
-            }
+            var del = config.GetMapToTargetFunction(sourceType, destinationType);
+            var canUseDynamic = sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible;
+            return DelegateInvokeCompat.InvokeMapToTarget<TDestination>(del, source!, destination!, canUseDynamic);
         }
 
         /// <summary>
@@ -160,17 +148,10 @@ namespace Mapster
         public static object? Adapt(this object source, Type sourceType, Type destinationType, TypeAdapterConfig config)
         {
             var del = config.GetMapFunction(sourceType, destinationType);
-            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
-            {
-                dynamic fn = del;
-                return fn((dynamic)source);
-            }
-            else
-            {
-                //NOTE: if type is non-public, we cannot use dynamic
-                //DynamicInvoke is slow, but works with non-public
-                return del.DynamicInvoke(source);
-            }
+            var canUseDynamic = sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible;
+            //NOTE: if type is non-public, we cannot use dynamic
+            //DynamicInvoke is slow, but works with non-public
+            return DelegateInvokeCompat.InvokeMap(del, source, canUseDynamic);
         }
 
         /// <summary>
@@ -198,17 +179,10 @@ namespace Mapster
         public static object? Adapt(this object source, object destination, Type sourceType, Type destinationType, TypeAdapterConfig config)
         {
             var del = config.GetMapToTargetFunction(sourceType, destinationType);
-            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
-            {
-                dynamic fn = del;
-                return fn((dynamic)source, (dynamic)destination);
-            }
-            else
-            {
-                //NOTE: if type is non-public, we cannot use dynamic
-                //DynamicInvoke is slow, but works with non-public
-                return del.DynamicInvoke(source, destination);
-            }
+            var canUseDynamic = sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible;
+            //NOTE: if type is non-public, we cannot use dynamic
+            //DynamicInvoke is slow, but works with non-public
+            return DelegateInvokeCompat.InvokeMapToTarget(del, source, destination, canUseDynamic);
         }
         
         /// <summary>
