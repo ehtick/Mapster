@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Mapster;
+using Mapster.Utils;
 
 // ReSharper disable once CheckNamespace
 namespace MapsterMapper
@@ -84,17 +85,10 @@ namespace MapsterMapper
         public virtual object Map(object source, Type sourceType, Type destinationType)
         {
             var del = Config.GetMapFunction(sourceType, destinationType);
-            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
-            {
-                dynamic fn = del;
-                return fn((dynamic)source);
-            }
-            else
-            {
-                //NOTE: if type is non-public, we cannot use dynamic
-                //DynamicInvoke is slow, but works with non-public
-                return del.DynamicInvoke(source);
-            }
+            var canUseDynamic = sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible;
+            //NOTE: if type is non-public, we cannot use dynamic
+            //DynamicInvoke is slow, but works with non-public
+            return DelegateInvokeCompat.InvokeMap(del, source, canUseDynamic)!;
         }
 
 
@@ -106,20 +100,13 @@ namespace MapsterMapper
 		/// <param name="sourceType">Source type to map.</param>
 		/// <param name="destinationType">Destination type to map.</param>
 		/// <returns>mapped result object</returns>
-		public virtual object Map(object source, object destination, Type sourceType, Type destinationType)
+        public virtual object Map(object source, object destination, Type sourceType, Type destinationType)
         {
             var del = Config.GetMapToTargetFunction(sourceType, destinationType);
-            if (sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible)
-            {
-                dynamic fn = del;
-                return fn((dynamic)source, (dynamic)destination);
-            }
-            else
-            {
-                //NOTE: if type is non-public, we cannot use dynamic
-                //DynamicInvoke is slow, but works with non-public
-                return del.DynamicInvoke(source, destination);
-            }
+            var canUseDynamic = sourceType.GetTypeInfo().IsVisible && destinationType.GetTypeInfo().IsVisible;
+            //NOTE: if type is non-public, we cannot use dynamic
+            //DynamicInvoke is slow, but works with non-public
+            return DelegateInvokeCompat.InvokeMapToTarget(del, source, destination, canUseDynamic)!;
         }
     }
 

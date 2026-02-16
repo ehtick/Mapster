@@ -11,24 +11,31 @@ namespace Mapster.Tests;
 [TestClass]
 public class WhenUsingIMapFrom
 {
+    private readonly TypeAdapterConfig _config;
     private readonly Mapper _mapper;
+    private readonly List<Type> _types;
 
     public WhenUsingIMapFrom()
     {
-        _mapper = new Mapper();
-        var types = new List<Type>
+        _config = new TypeAdapterConfig
+        {
+            RequireExplicitMapping = true
+        };
+        _mapper = new Mapper(_config);
+        _types = new List<Type>
         {
             typeof(SourceModel),
             typeof(InheritedDestinationModel),
             typeof(DestinationModel)
         };
-        TypeAdapterConfig.GlobalSettings.ScanInheritedTypes(types);
     }
 
     [TestMethod]
     public void TestIMapFrom_WhenMethodIsNotImplemented()
     {
         var source = new SourceModel(DesireValues.Text);
+        Should.Throw<InvalidOperationException>(() => _mapper.Map<DestinationModel>(source));
+        _config.ScanInheritedTypes(_types);
         var destination = _mapper.Map<DestinationModel>(source);
         destination.Type.ShouldBe(DesireValues.Text);
     }
@@ -37,6 +44,8 @@ public class WhenUsingIMapFrom
     public void TestIMapFrom_WhenMethodImplemented()
     {
         var source = new SourceModel(DesireValues.Text);
+        Should.Throw<InvalidOperationException>(() => _mapper.Map<InheritedDestinationModel>(source));
+        _config.ScanInheritedTypes(_types);
         var destination = _mapper.Map<InheritedDestinationModel>(source);
         destination.Type.ShouldBe(DesireValues.Text);
         destination.Value.ShouldBe(9);

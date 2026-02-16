@@ -2,9 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Mapster.Utils
@@ -40,7 +38,7 @@ namespace Mapster.Utils
 
                 // For dynamically built types, it is possible to have periods in the property name.
                 // Rejoin an incrementing number of parts with periods to try and find a property match. 
-                if (IsPropertyOrFieldPathWithPeriods(current, props[i..], out next, out int combinationLength))
+                if (IsPropertyOrFieldPathWithPeriods(current, props, i, out next, out int combinationLength))
                 {
                     current = next;
                     i += combinationLength - 1;
@@ -53,18 +51,19 @@ namespace Mapster.Utils
             return current;
         }
 
-        private static bool IsPropertyOrFieldPathWithPeriods(Expression expr, string[] path, [NotNullWhen(true)] out Expression? propExpr, out int combinationLength)
+        private static bool IsPropertyOrFieldPathWithPeriods(Expression expr, string[] path, int startIndex, out Expression? propExpr, out int combinationLength)
         {
-            if (path.Length < 2)
+            var remaining = path.Length - startIndex;
+            if (remaining < 2)
             {
                 propExpr = null;
                 combinationLength = 0;
                 return false;
             }
 
-            for (int count = 2; count <= path.Length; count++)
+            for (int count = 2; count <= remaining; count++)
             {
-                string prop = string.Join('.', path[..count]);
+                string prop = string.Join(".", path, startIndex, count);
                 if (IsPropertyOrField(expr, prop, out propExpr))
                 {
                     combinationLength = count;
@@ -77,7 +76,7 @@ namespace Mapster.Utils
             return false;
         }
 
-        private static bool IsDictionaryKey(Expression expr, string prop, [NotNullWhen(true)] out Expression? propExpr)
+        private static bool IsDictionaryKey(Expression expr, string prop, out Expression? propExpr)
         {
             var type = expr.Type;
             var dictType = type.GetDictionaryType();
@@ -96,7 +95,7 @@ namespace Mapster.Utils
             return true;
             }
 
-        private static bool IsPropertyOrField(Expression expr, string prop, [NotNullWhen(true)] out Expression? propExpr)
+        private static bool IsPropertyOrField(Expression expr, string prop, out Expression? propExpr)
         {
             Type type = expr.Type;
 

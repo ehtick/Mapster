@@ -31,7 +31,7 @@ namespace Sample.CodeGen
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddProblemDetails();
-            services.Scan(selector => selector.FromCallingAssembly()
+            services.Scan(selector => selector.FromAssemblyOf<Startup>()
                 .AddClasses().AsMatchingInterface().WithSingletonLifetime());
         }
 

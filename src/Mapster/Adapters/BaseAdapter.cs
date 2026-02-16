@@ -217,7 +217,7 @@ namespace Mapster.Adapters
             Expression? set;
             var requiremembers = arg.DestinationType.GetProperties()
                 .Where(x => x.GetCustomAttributes()
-                .Any(y => y.GetType() == typeof(System.Runtime.CompilerServices.RequiredMemberAttribute)));
+                .Any(y => y.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute"));
 
             if (requiremembers.Count() != 0)
                 set = CreateInlineExpression(source, arg, true);

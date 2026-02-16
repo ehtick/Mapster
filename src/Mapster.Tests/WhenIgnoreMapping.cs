@@ -133,7 +133,11 @@ namespace Mapster.Tests
 
         static ConstructorInfo? GetConstructor<TDestination>()
         {
-            var parameterlessCtorInfo = typeof(TDestination).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, new Type[0]);
+            var parameterlessCtorInfo = typeof(TDestination).GetConstructor(
+                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+                binder: null,
+                types: Type.EmptyTypes,
+                modifiers: null);
 
             var ctors = typeof(TDestination).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             var validCandidateCtors = ctors.Except(new[] { parameterlessCtorInfo }).ToArray();
