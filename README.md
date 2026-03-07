@@ -26,7 +26,6 @@ Writing mapping methods is a machine job. Do not waste your time, let Mapster do
 |------|--------|-------------|
 | **Mapster.Tool** | [![Mapster.Tool](https://img.shields.io/nuget/v/Mapster.Tool.svg?label=Mapster.Tool&color=informational)](https://www.nuget.org/packages/Mapster.Tool/latest) | [![Mapster.Tool](https://img.shields.io/nuget/vpre/Mapster.Tool.svg?label=Mapster.Tool&color=orange)](https://www.nuget.org/packages/Mapster.Tool) |
 
-_Badges zeigen die jeweils aktuellste Stable-Version und die aktuellste Pre-Release-Version._
 
 ## Installation
 
@@ -105,7 +104,7 @@ using (MyDbContext context = new MyDbContext())
 
 ### Generating models & mappers
 
-No need to write your own DTO classes. Mapster provides [Mapster.Tool](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool) to help you generating models. And if you would like to have explicit mapping, Mapster also generates mapper class for you.
+No need to write your own DTO classes. Mapster provides [Mapster.Tool](https://mapstermapper.github.io/Mapster/articles/tools/mapster-tool/Mapster-Tool-Overview.html) to help you generating models. And if you would like to have explicit mapping, Mapster also generates mapper class for you.
 
 ```csharp
 [AdaptTo("[name]Dto"), GenerateMapper]
@@ -129,14 +128,14 @@ public static class StudentMapper {
 
 ## What's new
 
-- [Fluent API for code generation](https://github.com/MapsterMapper/Mapster/wiki/Fluent-API-Code-generation)
-- [Automatically generate mapping code on build](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool)
-- [Define setting to nested mapping](https://github.com/MapsterMapper/Mapster/wiki/Config-for-nested-mapping)
-- [`ISet`, `IDictionary`, `IReadOnlyDictionary` support](https://github.com/MapsterMapper/Mapster/wiki/Data-types#collections)
-- [`EmptyCollectionIfNull`, `CreateNewIfNull` DestinationTransform](https://github.com/MapsterMapper/Mapster/wiki/Setting-values#transform-value)
+- [Fluent API for code generation](https://mapstermapper.github.io/Mapster/articles/tools/mapster-tool/Fluent-API-Code-generation.html)
+- [Automatically generate mapping code on build](https://mapstermapper.github.io/Mapster/articles/tools/mapster-tool/Mapster-Tool-Overview.html)
+- [Define setting to nested mapping](https://mapstermapper.github.io/Mapster/articles/configuration/Config-for-nested-mapping.html)
+- [`ISet`, `IDictionary`, `IReadOnlyDictionary` support](https://mapstermapper.github.io/Mapster/articles/mapping/Data-types.html#collections)
+- [`EmptyCollectionIfNull`, `CreateNewIfNull` DestinationTransform](https://mapstermapper.github.io/Mapster/articles/settings/Setting-values.html#transform-value)
 - [Several fixes](https://github.com/MapsterMapper/Mapster/releases/)
 - New plugins
-  - [Immutable collection support](https://github.com/MapsterMapper/Mapster/wiki/Immutable)
+  - [Immutable collection support](https://mapstermapper.github.io/Mapster/articles/packages/Immutable.html)
 
 ## Why Mapster?
 
@@ -145,8 +144,8 @@ public static class StudentMapper {
 Mapster was designed to be efficient on both speed and memory. You could gain a 4x performance improvement whilst using only 1/3 of memory.
 And you could gain up to 12x faster performance with:
 
-- [Roslyn Compiler](https://github.com/MapsterMapper/Mapster/wiki/Debugging)
-- [FEC](https://github.com/MapsterMapper/Mapster/wiki/FastExpressionCompiler)
+- [Roslyn Compiler](https://mapstermapper.github.io/Mapster/articles/packages/ExpressionDebugging.html)
+- [FEC](https://mapstermapper.github.io/Mapster/articles/packages/FastExpressionCompiler.html)
 - Code generation
 
 |                    Method |      Mean |    StdDev |     Error |      Gen 0 | Gen 1 | Gen 2 | Allocated |
@@ -175,8 +174,8 @@ Code generation allows you to
 
 There are currently two tools which you can choose based on your preferences.
 
-- [Mapster.Tool](https://github.com/MapsterMapper/Mapster/wiki/Mapster.Tool) _**NEW!**_
-- [TextTemplate](https://github.com/MapsterMapper/Mapster/wiki/TextTemplate)
+- [Mapster.Tool](https://mapstermapper.github.io/Mapster/articles/tools/mapster-tool/Mapster-Tool-Overview.html) _**NEW!**_
+- [TextTemplate](https://mapstermapper.github.io/Mapster/articles/tools/TextTemplate.html)
 
 ## Change logs
 
