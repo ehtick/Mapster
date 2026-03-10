@@ -30,7 +30,7 @@ Write-Information "Cleaning obsolete API documentation..." -InformationAction Co
 # Step 3: Build documentation
 Write-Information "Building documentation..." -InformationAction Continue
 
-& .\Build-Docs.ps1 -LogLevel $LogLevel -serve $true -open-browser $true
+& .\Build-Docs.ps1 -LogLevel $LogLevel -serve $true -openbrowser $true
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Documentation build failed"
