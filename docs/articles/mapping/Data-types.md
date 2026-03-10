@@ -98,7 +98,7 @@ dict["Y"].ShouldBe(3);
 
 >[!IMPORTANT]
 > Mapster treats Record type as an immutable type.
-> In this regard, only a with-like non-destructive mutation is available.
+> Only a Nondestructive mutation - creating a new object with modified properties.
 >
 > ```csharp
 > var result = source.adapt(data) 
