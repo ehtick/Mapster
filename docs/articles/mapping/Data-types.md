@@ -187,6 +187,6 @@ var target = src.Adapt<Person>();
 
 | Mapping features | v7.4.0 | v10.0 |
 |:-----------------|:------:|:-----:|
-|Custom constructor mapping| - | ✅ |
-|Ignore| - | ✅ |
-|IgnoreNullValues| - | ✅ |
+|[Custom constructor mapping](xref:Mapster.Settings.ConstructorMapping)| - | ✅ |
+|[Ignore](xref:Mapster.Settings.Custom.IgnoringMembers#ignore-extension-method)| - | ✅ |
+|[IgnoreNullValues](xref:Mapster.Settings.Custom.IgnoringMembers#ignorenullvalues-extension-method)| - | ✅ |
