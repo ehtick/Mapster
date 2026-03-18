@@ -125,10 +125,10 @@ namespace ExpressionDebugger
             assemblyStream.Seek(0, SeekOrigin.Begin);
             symbolsStream.Seek(0, SeekOrigin.Begin);
 
-#if NETSTANDARD2_0 || NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
             return System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(assemblyStream, symbolsStream);
 #else
-                return Assembly.Load(assemblyStream.ToArray(), symbolsStream.ToArray());
+            return Assembly.Load(assemblyStream.ToArray(), symbolsStream.ToArray());
 #endif
         }
 

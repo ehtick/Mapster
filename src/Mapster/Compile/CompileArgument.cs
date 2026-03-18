@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Mapster.Utils;
 
 namespace Mapster
 {
@@ -19,19 +20,23 @@ namespace Mapster
         private HashSet<string>? _srcNames;
         internal HashSet<string> GetSourceNames()
         {
-            return _srcNames ??= (from it in Settings.Resolvers
-                                  where it.SourceMemberName != null
-                                  select it.SourceMemberName!.Split('.').First()).ToHashSet();
+            return _srcNames ??= new HashSet<string>(
+                from it in Settings.Resolvers
+                where it.SourceMemberName != null
+                select it.SourceMemberName!.Split('.').First(),
+                StringComparer.Ordinal);
         }
 
         private HashSet<string>? _destNames;
         internal HashSet<string> GetDestinationNames(bool split = true)
         {
-            return _destNames ??= (from it in Settings.Resolvers
-                                   where it.DestinationMemberName != null
-                                   select split
-                                       ? it.DestinationMemberName.Split('.').First()
-                                       : it.DestinationMemberName).ToHashSet();
+            return _destNames ??= new HashSet<string>(
+                from it in Settings.Resolvers
+                where it.DestinationMemberName != null
+                select split
+                    ? it.DestinationMemberName.Split('.').First()
+                    : it.DestinationMemberName,
+                StringComparer.Ordinal);
         }
 
         private bool _fetchConstructUsing;

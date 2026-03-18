@@ -50,9 +50,7 @@ namespace Mapster.Adapters
 
                     s.Visit(getter);
 
-                    var match = arg.Settings.ProjectToTypeResolvers.GetValueOrDefault(s.MemeberName);
-
-                    if (match != null)
+                    if (arg.Settings.ProjectToTypeResolvers.TryGetValue(s.MemeberName, out var match))
                     {
                         arg.Settings.Resolvers.Add(new InvokerModel
                         {
@@ -119,7 +117,7 @@ namespace Mapster.Adapters
                     && destinationMember.Info is PropertyInfo propinfo)
                 {
                     if (propinfo.GetCustomAttributes()
-                        .Any(y => y.GetType() == typeof(System.Runtime.CompilerServices.RequiredMemberAttribute)))
+                        .Any(y => y.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute"))
                     {
                         getter = destinationMember.Type.CreateDefault();
                     }
@@ -281,8 +279,9 @@ namespace Mapster.Adapters
 
         protected void IgnoreNonMapped (ClassModel classModel, CompileArgument arg)
         {
-            var notMappingToIgnore = classModel.Members
-                .ExceptBy(arg.Settings.Resolvers.Select(x => x.DestinationMemberName), 
+            var notMappingToIgnore = LinqCompat.ExceptBy(
+                classModel.Members,
+                arg.Settings.Resolvers.Select(x => x.DestinationMemberName),
                 y => y.Name);
 
             foreach (var item in notMappingToIgnore)
@@ -298,7 +297,7 @@ namespace Mapster.Adapters
                 Members = arg.DestinationType.GetFieldsAndProperties(true)
                     .Where(x => x.GetType() == typeof(PropertyModel))
                     .Where(y => ((PropertyInfo)y.Info).GetCustomAttributes()
-                    .Any(y => y.GetType() == typeof(System.Runtime.CompilerServices.RequiredMemberAttribute)))
+                    .Any(y => y.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute"))
             };
         }
 

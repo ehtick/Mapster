@@ -17,7 +17,7 @@ public class TestBase
     {
         ServiceCollection services = new();
         services.Scan(selector => selector
-            .FromCallingAssembly()
+            .FromAssemblyOf<TestBase>()
             .AddClasses()
             .AsMatchingInterface()
             .WithSingletonLifetime());

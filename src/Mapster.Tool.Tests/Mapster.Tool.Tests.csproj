@@ -8,9 +8,13 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+        <TargetFrameworks>$(TargetFrameworks);net48</TargetFrameworks>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageReference Include="Scrutor" Version="5.0.2" />
         <PackageReference Include="xunit" Version="2.9.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
@@ -25,6 +29,9 @@
     <ItemGroup>
         <Generated Include="**\*.g.cs" />
         <Generated Remove="obj\**" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     </ItemGroup>
     <Target Name="CleanGenerated">
         <Delete Files="@(Generated)" />
@@ -45,7 +52,11 @@
     <ItemGroup>
       <None Remove="obj\**" />
     </ItemGroup>
-    <ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+      <ProjectReference Include="..\Mapster\Mapster.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
       <ProjectReference Include="..\Mapster.Tool\Mapster.Tool.csproj" />
     </ItemGroup>
 
